@@ -1,6 +1,6 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Transaction encapsulates information about the state of

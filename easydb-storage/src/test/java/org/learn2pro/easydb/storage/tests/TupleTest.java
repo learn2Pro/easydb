@@ -1,11 +1,11 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
 import static org.junit.Assert.assertEquals;
+
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Test;
-
-import simpledb.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;;
 
 public class TupleTest extends SimpleDbTestBase {
 
@@ -41,7 +41,8 @@ public class TupleTest extends SimpleDbTestBase {
     /**
      * Unit test for Tuple.getRecordId() and Tuple.setRecordId()
      */
-    @Test public void modifyRecordId() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void modifyRecordId() {
         Tuple tup1 = new Tuple(Utility.getTupleDesc(1));
         HeapPageId pid1 = new HeapPageId(0,0);
         RecordId rid1 = new RecordId(pid1, 0);
@@ -49,7 +50,7 @@ public class TupleTest extends SimpleDbTestBase {
 
 	try {
 	    assertEquals(rid1, tup1.getRecordId());
-	} catch (java.lang.UnsupportedOperationException e) {
+	} catch (UnsupportedOperationException e) {
 		//rethrow the exception with an explanation
     	throw new UnsupportedOperationException("modifyRecordId() test failed due to " +
     			"RecordId.equals() not being implemented.  This is not required for Lab 1, " +

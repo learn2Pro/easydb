@@ -1,6 +1,7 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Project is an operator that implements a relational projection.
@@ -15,7 +16,7 @@ public class Project extends Operator {
     /**
      * Constructor accepts a child operator to read tuples to apply projection
      * to and a list of fields in output tuple
-     * 
+     *
      * @param fieldList
      *            The ids of the fields child's tupleDesc to project out
      * @param typesList
@@ -27,7 +28,7 @@ public class Project extends Operator {
             OpIterator child) {
         this(fieldList,typesList.toArray(new Type[]{}),child);
     }
-    
+
     public Project(ArrayList<Integer> fieldList, Type[] types,
             OpIterator child) {
         this.child = child;
@@ -63,7 +64,7 @@ public class Project extends Operator {
     /**
      * Operator.fetchNext implementation. Iterates over tuples from the child
      * operator, projecting out the fields from the tuple
-     * 
+     *
      * @return The next tuple, or null if there are no more tuples
      */
     protected Tuple fetchNext() throws NoSuchElementException,
@@ -92,5 +93,5 @@ public class Project extends Operator {
 	    this.child = children[0];
 	}
     }
-    
+
 }

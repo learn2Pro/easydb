@@ -1,13 +1,13 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * Implements a OpIterator by wrapping an Iterable<Tuple>.
  */
 public class TupleIterator implements OpIterator {
     /**
-	 * 
+	 *
 	 */
     private static final long serialVersionUID = 1L;
     Iterator<Tuple> i = null;
@@ -17,7 +17,7 @@ public class TupleIterator implements OpIterator {
     /**
      * Constructs an iterator from the specified Iterable, and the specified
      * descriptor.
-     * 
+     *
      * @param tuples
      *            The set of tuples to iterate over
      */

@@ -1,6 +1,4 @@
-package simpledb;
-
-import java.io.IOException;
+package org.learn2pro.easydb.storage;
 
 /**
  * The delete operator. Delete reads tuples from its child operator and removes
@@ -13,7 +11,7 @@ public class Delete extends Operator {
     /**
      * Constructor specifying the transaction that this delete belongs to as
      * well as the child to read from.
-     * 
+     *
      * @param t
      *            The transaction this delete runs in
      * @param child
@@ -44,7 +42,7 @@ public class Delete extends Operator {
      * Deletes tuples as they are read from the child operator. Deletes are
      * processed via the buffer pool (which can be accessed via the
      * Database.getBufferPool() method.
-     * 
+     *
      * @return A 1-field tuple containing the number of deleted records.
      * @see Database#getBufferPool
      * @see BufferPool#deleteTuple

@@ -1,5 +1,6 @@
-package simpledb;
-import java.util.*;
+package org.learn2pro.easydb.storage;
+
+import java.util.NoSuchElementException;
 
 /** IndexDBIterator is the interface that index access methods
     implement in SimpleDb.

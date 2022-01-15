@@ -1,5 +1,7 @@
-package simpledb;
-import java.io.*;
+package org.learn2pro.easydb.storage;
+
+import java.io.File;
+import java.io.IOException;
 
 public class SimpleDb {
     public static void main (String args[])
@@ -17,7 +19,7 @@ public class SimpleDb {
             Type[] ts = new Type[numOfAttributes];
             char fieldSeparator=',';
 
-            if (args.length == 3) 
+            if (args.length == 3)
                 for (int i=0;i<numOfAttributes;i++)
                     ts[i]=Type.INT_TYPE;
             else {
@@ -55,7 +57,7 @@ public class SimpleDb {
             DbFile table = Utility.openHeapFile(columns, tableFile);
             TransactionId tid = new TransactionId();
             DbFileIterator it = table.iterator(tid);
-            
+
             if(null == it){
                System.out.println("Error: method HeapFile.iterator(TransactionId tid) not yet implemented!");
             } else {
@@ -73,14 +75,14 @@ public class SimpleDb {
             for (int i = 1; i < args.length; ++i) {
                 newargs[i-1] = args[i];
             }
-            
+
             try {
                 //dynamically load Parser -- if it doesn't exist, print error message
-                Class<?> c = Class.forName("simpledb.Parser");
+                Class<?> c = Class.forName("Parser");
                 Class<?> s = String[].class;
-                
+
                 java.lang.reflect.Method m = c.getMethod("main", s);
-                m.invoke(null, (java.lang.Object)newargs);
+                m.invoke(null, (Object)newargs);
             } catch (ClassNotFoundException cne) {
                 System.out.println("Class Parser not found -- perhaps you are trying to run the parser as a part of lab1?");
             }

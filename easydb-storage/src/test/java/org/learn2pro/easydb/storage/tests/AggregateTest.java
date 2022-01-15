@@ -1,14 +1,14 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import junit.framework.JUnit4TestAdapter;
 
+import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.Test;
-
-import simpledb.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class AggregateTest extends SimpleDbTestBase {
 
@@ -28,7 +28,7 @@ public class AggregateTest extends SimpleDbTestBase {
   /**
    * Initialize each unit test
    */
-  @Before public void createTupleLists() throws Exception {	  
+  @Before public void createTupleLists() throws Exception {
     this.scan1 = TestUtil.createTupleList(width1,
         new int[] { 1, 2,
                     1, 4,

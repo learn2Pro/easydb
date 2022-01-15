@@ -1,6 +1,4 @@
-package simpledb;
-
-import java.lang.Exception;
+package org.learn2pro.easydb.storage;
 
 /** Generic database exception class */
 public class DbException extends Exception {

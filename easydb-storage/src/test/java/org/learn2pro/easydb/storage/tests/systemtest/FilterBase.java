@@ -1,14 +1,13 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 import org.junit.Test;
-
-import simpledb.*;
+import org.learn2pro.easydb.storage.*;
 
 public abstract class FilterBase extends SimpleDbTestBase {
     private static final int COLUMNS = 3;

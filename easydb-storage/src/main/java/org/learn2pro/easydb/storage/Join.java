@@ -1,6 +1,6 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
  * The Join operator implements the relational join operation.
@@ -12,7 +12,7 @@ public class Join extends Operator {
     /**
      * Constructor. Accepts two children to join and the predicate to join them
      * on
-     * 
+     *
      * @param p
      *            The predicate to use to join the children
      * @param child1
@@ -50,7 +50,7 @@ public class Join extends Operator {
     }
 
     /**
-     * @see simpledb.TupleDesc#merge(TupleDesc, TupleDesc) for possible
+     * @see TupleDesc#merge(TupleDesc, TupleDesc) for possible
      *      implementation logic.
      */
     public TupleDesc getTupleDesc() {
@@ -85,7 +85,7 @@ public class Join extends Operator {
      * <p>
      * For example, if one tuple is {1,2,3} and the other tuple is {1,5,6},
      * joined on equality of the first column, then this returns {1,2,3,1,5,6}.
-     * 
+     *
      * @return The next matching tuple.
      * @see JoinPredicate#filter
      */

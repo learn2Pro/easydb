@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /**
  * Inserts tuples read from the child operator into the tableId specified in the

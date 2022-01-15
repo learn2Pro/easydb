@@ -1,8 +1,8 @@
 
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * The interface for database files on disk. Each table is represented by a
@@ -82,7 +82,7 @@ public interface DbFile {
      * @return an ID uniquely identifying this HeapFile.
      */
     public int getId();
-    
+
     /**
      * Returns the TupleDesc of the table stored in this DbFile.
      * @return TupleDesc of this DbFile.

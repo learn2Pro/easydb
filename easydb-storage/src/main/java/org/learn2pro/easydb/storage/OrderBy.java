@@ -1,6 +1,10 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * OrderBy is an operator that implements a relational ORDER BY.
@@ -18,7 +22,7 @@ public class OrderBy extends Operator {
 
     /**
      * Creates a new OrderBy node over the tuples from the iterator.
-     * 
+     *
      * @param orderbyField
      *            the field to which the sort is applied.
      * @param asc
@@ -33,22 +37,22 @@ public class OrderBy extends Operator {
         this.orderByFieldName = td.getFieldName(orderbyField);
         this.asc = asc;
     }
-    
+
     public boolean isASC()
     {
 	return this.asc;
     }
-    
+
     public int getOrderByField()
     {
         return this.orderByField;
     }
-    
+
     public String getOrderFieldName()
     {
 	return this.orderByFieldName;
     }
-    
+
     public TupleDesc getTupleDesc() {
         return td;
     }
@@ -76,7 +80,7 @@ public class OrderBy extends Operator {
     /**
      * Operator.fetchNext implementation. Returns tuples from the child operator
      * in order
-     * 
+     *
      * @return The next tuple in the ordering, or null if there are no more
      *         tuples
      */
@@ -98,26 +102,25 @@ public class OrderBy extends Operator {
         this.child = children[0];
     }
 
-}
+    public static class TupleComparator implements Comparator<Tuple> {
+        int field;
+        boolean asc;
 
-class TupleComparator implements Comparator<Tuple> {
-    int field;
-    boolean asc;
+        public TupleComparator(int field, boolean asc) {
+            this.field = field;
+            this.asc = asc;
+        }
 
-    public TupleComparator(int field, boolean asc) {
-        this.field = field;
-        this.asc = asc;
+        public int compare(Tuple o1, Tuple o2) {
+            Field t1 = (o1).getField(field);
+            Field t2 = (o2).getField(field);
+            if (t1.compare(Predicate.Op.EQUALS, t2))
+                return 0;
+            if (t1.compare(Predicate.Op.GREATER_THAN, t2))
+                return asc ? 1 : -1;
+            else
+                return asc ? -1 : 1;
+        }
+
     }
-
-    public int compare(Tuple o1, Tuple o2) {
-        Field t1 = (o1).getField(field);
-        Field t2 = (o2).getField(field);
-        if (t1.compare(Predicate.Op.EQUALS, t2))
-            return 0;
-        if (t1.compare(Predicate.Op.GREATER_THAN, t2))
-            return asc ? 1 : -1;
-        else
-            return asc ? -1 : 1;
-    }
-    
 }

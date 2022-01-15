@@ -1,7 +1,9 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
-import java.io.*;
 
 /**
  * Class representing a type in SimpleDB.
@@ -36,14 +38,14 @@ public enum Type implements Serializable {
                 int strLen = dis.readInt();
                 byte bs[] = new byte[strLen];
                 dis.read(bs);
-                dis.skipBytes(STRING_LEN-strLen);
+                dis.skipBytes(STRING_LEN - strLen);
                 return new StringField(new String(bs), STRING_LEN);
             } catch (IOException e) {
                 throw new ParseException("couldn't parse", 0);
             }
         }
     };
-    
+
     public static final int STRING_LEN = 128;
 
   /**

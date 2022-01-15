@@ -1,16 +1,21 @@
-package simpledb;
-
-import simpledb.TestUtil.SkeletonFile;
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
-
-import org.junit.Before;
-import org.junit.Test;
+package org.learn2pro.easydb.storage.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import junit.framework.JUnit4TestAdapter;
+import org.junit.Before;
+import org.junit.Test;
+import org.learn2pro.easydb.storage.BTreeHeaderPage;
+import org.learn2pro.easydb.storage.BTreePageId;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class BTreeHeaderPageTest extends SimpleDbTestBase {
 	private BTreePageId pid;

@@ -1,13 +1,13 @@
 
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /**
  * Debug is a utility class that wraps println statements and allows
  * more or less command line output to be turned on.
  * <p>
  * Change the value of the DEBUG_LEVEL constant using a system property:
- * simpledb.Debug. For example, on the command line, use -Dsimpledb.Debug=x,
- * or simply -Dsimpledb.Debug to enable it at level 0.
+ * Debug. For example, on the command line, use -DDebug=x,
+ * or simply -DDebug to enable it at level 0.
  * The log(level, message, ...) method will print to standard output if the
  * level number is less than or equal to the currently set DEBUG_LEVEL.
  */
@@ -15,7 +15,7 @@ package simpledb;
 public class Debug {
   private static final int DEBUG_LEVEL;
   static {
-      String debug = System.getProperty("simpledb.Debug");
+      String debug = System.getProperty("Debug");
       if (debug == null) {
           // No system property = disabled
           DEBUG_LEVEL = -1;

@@ -30,5 +30,9 @@ public class ZTransactStmt implements ZStatement {
   public void setComment(String c) { comment_ = new String(c); }
   public String getComment() { return comment_; }
   public boolean isReadOnly() { return readOnly_; }
-};
+  public String getStmtType(){
+    return statement_;
+  }
+
+}
 

@@ -1,13 +1,13 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
 
-import java.io.*;
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import org.junit.Test;
-
-import simpledb.*;
-
-import static org.junit.Assert.*;
+import org.learn2pro.easydb.storage.*;
 
 /**
  * Test logging, aborts, and recovery.

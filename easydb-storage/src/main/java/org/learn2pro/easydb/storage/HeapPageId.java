@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /** Unique identifier for HeapPage objects. */
 public class HeapPageId implements PageId {

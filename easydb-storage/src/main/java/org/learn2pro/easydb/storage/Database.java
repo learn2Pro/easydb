@@ -1,6 +1,7 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * <p>
  * Provides a set of methods that can be used to access these variables from
  * anywhere.
- * 
+ *
  * @Threadsafe
  */
 public class Database {

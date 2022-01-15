@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /** A LogicalScanNode represents table in the FROM list in a
  * LogicalQueryPlan */

@@ -1,19 +1,21 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
+
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.NoSuchElementException;
 import java.util.Random;
-
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import simpledb.TestUtil.SkeletonFile;
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbFile;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class CatalogTest extends SimpleDbTestBase {
 	private static Random r = new Random();
@@ -21,7 +23,7 @@ public class CatalogTest extends SimpleDbTestBase {
     private static int id1 = r.nextInt();
     private static int id2 = r.nextInt();
 	private String nameThisTestRun;
-    
+
     @Before public void addTables() throws Exception {
         Database.getCatalog().clear();
 		nameThisTestRun = SystemTestUtil.getUUID();
@@ -45,14 +47,14 @@ public class CatalogTest extends SimpleDbTestBase {
     @Test public void getTableId() {
         assertEquals(id2, Database.getCatalog().getTableId(name));
         assertEquals(id1, Database.getCatalog().getTableId(nameThisTestRun));
-        
+
         try {
             Database.getCatalog().getTableId(null);
             Assert.fail("Should not find table with null name");
         } catch (NoSuchElementException e) {
             // Expected to get here
         }
-        
+
         try {
             Database.getCatalog().getTableId("foo");
             Assert.fail("Should not find table with name foo");
@@ -72,7 +74,7 @@ public class CatalogTest extends SimpleDbTestBase {
         // rely on HeapFileTest for that. perform some basic checks.
         assertEquals(id1, f.getId());
     }
-    
+
     /**
      * Check that duplicate names are handled correctly
      */
@@ -81,7 +83,7 @@ public class CatalogTest extends SimpleDbTestBase {
     	Database.getCatalog().addTable(new SkeletonFile(id3, Utility.getTupleDesc(2)), name);
     	assertEquals(id3, Database.getCatalog().getTableId(name));
     }
-    
+
     /**
      * Check that duplicate file ids are handled correctly
      */

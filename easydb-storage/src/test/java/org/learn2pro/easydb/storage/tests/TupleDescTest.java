@@ -1,14 +1,17 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.NoSuchElementException;
-
-import org.junit.Test;
-
-import simpledb.systemtest.SimpleDbTestBase;
-
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Type;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class TupleDescTest extends SimpleDbTestBase {
 
@@ -79,21 +82,21 @@ public class TupleDescTest extends SimpleDbTestBase {
                 assertEquals(Type.INT_TYPE, td.getFieldType(i));
         }
     }
-    
+
     /**
      * Unit test for TupleDesc.nameToId()
      */
     @Test public void nameToId() {
         int[] lengths = new int[] { 1, 2, 1000 };
         String prefix = "test";
-        
+
         for (int len: lengths) {
             // Make sure you retrieve well-named fields
             TupleDesc td = Utility.getTupleDesc(len, prefix);
             for (int i = 0; i < len; ++i) {
                 assertEquals(i, td.fieldNameToIndex(prefix + i));
             }
-            
+
             // Make sure you throw exception for non-existent fields
             try {
                 td.fieldNameToIndex("foo");
@@ -101,7 +104,7 @@ public class TupleDescTest extends SimpleDbTestBase {
             } catch (NoSuchElementException e) {
                 // expected to get here
             }
-            
+
             // Make sure you throw exception for null searches
             try {
                 td.fieldNameToIndex(null);
@@ -119,7 +122,7 @@ public class TupleDescTest extends SimpleDbTestBase {
                 // expected to get here
             }
         }
-    }    
+    }
 
     /**
      * Unit test for TupleDesc.getSize()

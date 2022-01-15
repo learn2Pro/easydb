@@ -1,6 +1,9 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * The Join operator implements the relational join operation.
@@ -17,7 +20,7 @@ public class HashEquiJoin extends Operator {
     /**
      * Constructor. Accepts to children to join and the predicate to join them
      * on
-     * 
+     *
      * @param p
      *            The predicate to use to join the children
      * @param child1
@@ -39,7 +42,7 @@ public class HashEquiJoin extends Operator {
     public TupleDesc getTupleDesc() {
         return comboTD;
     }
-    
+
     public String getJoinField1Name()
     {
 	return this.child1.getTupleDesc().getFieldName(this.pred.getField1());
@@ -49,7 +52,7 @@ public class HashEquiJoin extends Operator {
     {
 	return this.child2.getTupleDesc().getFieldName(this.pred.getField2());
     }
-    
+
     HashMap<Object, ArrayList<Tuple>> map = new HashMap<Object, ArrayList<Tuple>>();
     public final static int MAP_SIZE = 20000;
 
@@ -110,7 +113,7 @@ public class HashEquiJoin extends Operator {
      * <p>
      * For example, if one tuple is {1,2,3} and the other tuple is {1,5,6},
      * joined on equality of the first column, then this returns {1,2,3,1,5,6}.
-     * 
+     *
      * @return The next matching tuple.
      * @see JoinPredicate#filter
      */
@@ -169,5 +172,5 @@ public class HashEquiJoin extends Operator {
         this.child1 = children[0];
         this.child2 = children[1];
     }
-    
+
 }

@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,7 +56,8 @@ public class BTreeChecker {
      * 4) record to page pointers.
      * 5) occupancy invariants. (if enabled)
      */
-    public static void checkRep(BTreeFile bt, TransactionId tid, HashMap<PageId, Page> dirtypages,
+    public static void checkRep(
+            BTreeFile bt, TransactionId tid, HashMap<PageId, Page> dirtypages,
                                 boolean checkOccupancy) throws
             DbException, IOException, TransactionAbortedException {
         BTreeRootPtrPage rtptr = bt.getRootPtrPage(tid, dirtypages);
@@ -71,11 +72,12 @@ public class BTreeChecker {
         }
     }
 
-    static SubtreeSummary checkSubTree(BTreeFile bt, TransactionId tid, HashMap<PageId, Page> dirtypages,
+    static SubtreeSummary checkSubTree(
+            BTreeFile bt, TransactionId tid, HashMap<PageId, Page> dirtypages,
                                        BTreePageId pageId, Field lowerBound, Field upperBound,
                                        BTreePageId parentId, boolean checkOccupancy, int depth) throws
             TransactionAbortedException, DbException {
-        BTreePage page = (BTreePage )bt.getPage(tid, dirtypages, pageId, Permissions.READ_ONLY);
+        BTreePage page = (BTreePage)bt.getPage(tid, dirtypages, pageId, Permissions.READ_ONLY);
         assert(page.getParentId().equals(parentId));
 
         if (page.getId().pgcateg() == BTreePageId.LEAF) {

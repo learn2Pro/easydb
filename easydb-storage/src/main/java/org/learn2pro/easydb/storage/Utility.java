@@ -1,6 +1,8 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -136,7 +138,7 @@ public class Utility {
         Database.getCatalog().addTable(hf, UUID.randomUUID().toString());
         return hf;
     }
-    
+
     public static HeapFile openHeapFile(int cols, String colPrefix, File f) {
         // create the HeapFile and add it to the catalog
     	TupleDesc td = getTupleDesc(cols, colPrefix);

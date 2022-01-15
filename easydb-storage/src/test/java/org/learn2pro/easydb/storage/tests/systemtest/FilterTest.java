@@ -1,8 +1,9 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
+
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import static org.junit.Assert.*;
-import simpledb.*;
+import org.learn2pro.easydb.storage.*;
 
 public class FilterTest extends FilterBase {
     @Override

@@ -1,13 +1,14 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
-import simpledb.Predicate.Op;
-import simpledb.BTreeUtility.*;
-import simpledb.systemtest.SimpleDbTestBase;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
+import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.Test;
-import junit.framework.JUnit4TestAdapter;
+import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.BTreeUtility.BTreeWriter;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class BTreeDeadlockTest extends SimpleDbTestBase {
 	private Random rand;
@@ -46,7 +47,7 @@ public class BTreeDeadlockTest extends SimpleDbTestBase {
 			bp.deleteTuple(tid, t);
 		}
 
-		// this is the number of tuples we must insert to replace the deleted tuples 
+		// this is the number of tuples we must insert to replace the deleted tuples
 		// and cause the root node to split
 		count1 = tuples.size() + 1;
 
@@ -61,7 +62,7 @@ public class BTreeDeadlockTest extends SimpleDbTestBase {
 			bp.deleteTuple(tid, t);
 		}
 
-		// this is the number of tuples we must insert to replace the deleted tuples 
+		// this is the number of tuples we must insert to replace the deleted tuples
 		// and cause the root node to split
 		count2 = tuples.size() + 1;
 
@@ -75,7 +76,7 @@ public class BTreeDeadlockTest extends SimpleDbTestBase {
 	 * Helper method to clean up the syntax of starting a BTreeWriter thread.
 	 * The parameters pass through to the BTreeWriter constructor.
 	 */
-	public BTreeUtility.BTreeWriter startWriter(TransactionId tid, 
+	public BTreeUtility.BTreeWriter startWriter(TransactionId tid,
 			int item, int count) {
 
 		BTreeWriter bw = new BTreeWriter(tid, bf, item, count);
@@ -85,9 +86,9 @@ public class BTreeDeadlockTest extends SimpleDbTestBase {
 
 	/**
 	 * Not-so-unit test to construct a deadlock situation.
-	 * 
+	 *
 	 * This test causes two different transactions to update two (probably) different leaf nodes
-	 * Each transaction can happily insert tuples until the page fills up, but then 
+	 * Each transaction can happily insert tuples until the page fills up, but then
 	 * it needs to obtain a write lock on the root node in order to split the page. This will cause
 	 * a deadlock situation.
 	 */
@@ -102,7 +103,7 @@ public class BTreeDeadlockTest extends SimpleDbTestBase {
 
 		// allow read locks to acquire
 		Thread.sleep(POLL_INTERVAL);
-		
+
 		BTreeWriter writer1 = startWriter(tid1, item1, count1);
 		BTreeWriter writer2 = startWriter(tid2, item2, count2);
 

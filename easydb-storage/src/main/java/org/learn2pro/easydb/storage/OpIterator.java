@@ -1,6 +1,7 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
  * OpIterator is the iterator interface that all SimpleDB operators should

@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,32 +6,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.HeapFileEncoder;
+import org.learn2pro.easydb.storage.JoinOptimizer;
+import org.learn2pro.easydb.storage.LogicalJoinNode;
+import org.learn2pro.easydb.storage.Parser;
+import org.learn2pro.easydb.storage.ParsingException;
+import org.learn2pro.easydb.storage.Predicate;
+import org.learn2pro.easydb.storage.TableStats;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class JoinOptimizerTest extends SimpleDbTestBase {
 
     /**
-     * Given a matrix of tuples from SystemTestUtil.createRandomHeapFile, create
-     * an identical HeapFile table
-     * 
-     * @param tuples
-     *            Tuples to create a HeapFile from
-     * @param columns
-     *            Each entry in tuples[] must have
-     *            "columns == tuples.get(i).size()"
-     * @param colPrefix
-     *            String to prefix to the column names (the columns are named
-     *            after their column number by default)
+     * Given a matrix of tuples from SystemTestUtil.createRandomHeapFile, create an identical HeapFile table
+     *
+     * @param tuples Tuples to create a HeapFile from
+     * @param columns Each entry in tuples[] must have "columns == tuples.get(i).size()"
+     * @param colPrefix String to prefix to the column names (the columns are named after their column number by
+     *         default)
      * @return a new HeapFile containing the specified tuples
-     * @throws IOException
-     *             if a temporary file can't be created to hand to HeapFile to
-     *             open and read its data
+     * @throws IOException if a temporary file can't be created to hand to HeapFile to open and read its data
      */
     public static HeapFile createDuplicateHeapFile(
             ArrayList<ArrayList<Integer>> tuples, int columns, String colPrefix)
@@ -101,9 +106,8 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     }
 
     /**
-     * Verify that the estimated join costs from estimateJoinCost() are
-     * reasonable we check various order requirements for the output of
-     * estimateJoinCost.
+     * Verify that the estimated join costs from estimateJoinCost() are reasonable we check various order requirements
+     * for the output of estimateJoinCost.
      */
     @Test
     public void estimateJoinCostTest() throws ParsingException {
@@ -206,8 +210,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     }
 
     /**
-     * Verify that the join cardinalities produced by estimateJoinCardinality()
-     * are reasonable
+     * Verify that the join cardinalities produced by estimateJoinCardinality() are reasonable
      */
     @Test
     public void estimateJoinCardinality() throws ParsingException {
@@ -222,31 +225,31 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
 
         /*
          * Disable these tests as almost any answer could be defensible
-         * 
+         *
          * cardinality = j.estimateJoinCardinality(new
          * LogicalJoinNode(tableName1, tableName2, Integer.toString(3),
          * Integer.toString(4), Predicate.Op.EQUALS),
          * stats1.estimateTableCardinality(0.8),
          * stats2.estimateTableCardinality(0.2), false, false);
-         * 
+         *
          * // We don't specify in what way statistics should be used to improve
          * these estimates. // So, just require that they not be entirely
          * unreasonable. Assert.assertTrue(cardinality > 800);
          * Assert.assertTrue(cardinality <= 2000);
-         * 
+         *
          * cardinality = j.estimateJoinCardinality(new
          * LogicalJoinNode(tableName2, tableName1, Integer.toString(3),
          * Integer.toString(4), Predicate.Op.EQUALS),
          * stats2.estimateTableCardinality(0.2),
          * stats1.estimateTableCardinality(0.8), false, false);
-         * 
+         *
          * Assert.assertTrue(cardinality > 800); Assert.assertTrue(cardinality
          * <= 2000);
          */
 
         cardinality = j.estimateJoinCardinality(new LogicalJoinNode("t1", "t2",
-                "c" + Integer.toString(3), "c" + Integer.toString(4),
-                Predicate.Op.EQUALS), stats1.estimateTableCardinality(0.8),
+                        "c" + Integer.toString(3), "c" + Integer.toString(4),
+                        Predicate.Op.EQUALS), stats1.estimateTableCardinality(0.8),
                 stats2.estimateTableCardinality(0.2), true, false, TableStats
                         .getStatsMap());
 
@@ -257,8 +260,8 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         Assert.assertTrue(cardinality == 800 || cardinality == 2000);
 
         cardinality = j.estimateJoinCardinality(new LogicalJoinNode("t1", "t2",
-                "c" + Integer.toString(3), "c" + Integer.toString(4),
-                Predicate.Op.EQUALS), stats1.estimateTableCardinality(0.8),
+                        "c" + Integer.toString(3), "c" + Integer.toString(4),
+                        Predicate.Op.EQUALS), stats1.estimateTableCardinality(0.8),
                 stats2.estimateTableCardinality(0.2), false, true, TableStats
                         .getStatsMap());
 
@@ -266,8 +269,8 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     }
 
     /**
-     * Determine whether the orderJoins implementation is doing a reasonable job
-     * of ordering joins, and not taking an unreasonable amount of time to do so
+     * Determine whether the orderJoins implementation is doing a reasonable job of ordering joins, and not taking an
+     * unreasonable amount of time to do so
      */
     @Test
     public void orderJoinsTest() throws ParsingException, IOException,
@@ -377,8 +380,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     }
 
     /**
-     * Test a much-larger join ordering, to confirm that it executes in a
-     * reasonable amount of time
+     * Test a much-larger join ordering, to confirm that it executes in a reasonable amount of time
      */
     @Test(timeout = 60000)
     public void bigOrderJoinsTest() throws IOException, DbException,
@@ -521,8 +523,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     }
 
     /**
-     * Test a join ordering with an inequality, to make sure the inequality gets
-     * put as the outermost join
+     * Test a join ordering with an inequality, to make sure the inequality gets put as the outermost join
      */
     @Test
     public void nonequalityOrderJoinsTest() throws IOException, DbException,

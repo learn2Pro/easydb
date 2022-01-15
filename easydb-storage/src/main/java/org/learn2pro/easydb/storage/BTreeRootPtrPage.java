@@ -1,6 +1,10 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * BTreeRootPtrPage stores the pointer to the root node used in the B+ tree and
@@ -18,7 +22,7 @@ public class BTreeRootPtrPage implements Page {
 	private BTreePageId pid;
 	private DataInputStream dis;
 
-	private int root; 
+	private int root;
 	private int rootCategory;
 	private int header;
 
@@ -43,7 +47,7 @@ public class BTreeRootPtrPage implements Page {
 
 		// read in the header pointer
 		header = dis.readInt();
-		
+
 		setBeforeImage();
 	}
 
@@ -59,7 +63,7 @@ public class BTreeRootPtrPage implements Page {
 	}
 
 	/**
-	 * There is only one instance of a BTreeRootPtrPage per table. This static 
+	 * There is only one instance of a BTreeRootPtrPage per table. This static
 	 * method is separate from getId() in order to maintain the Page interface
 	 * @param tableid - the tableid of this table
 	 * @return the root pointer page id for the given table

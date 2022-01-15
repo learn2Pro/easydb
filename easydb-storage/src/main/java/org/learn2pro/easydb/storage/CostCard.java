@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 import java.util.Vector;
 
 /** Class returned by {@link JoinOptimizer#computeCostAndCardOfSubplan} specifying the

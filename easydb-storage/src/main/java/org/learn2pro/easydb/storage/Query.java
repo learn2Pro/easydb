@@ -1,14 +1,15 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.NoSuchElementException;
 
 /**
  * Query is a wrapper class to manage the execution of queries. It takes a query
  * plan in the form of a high level OpIterator (built by initiating the
  * constructors of query plans) and runs it as a part of a specified
  * transaction.
- * 
+ *
  * @author Sam Madden
  */
 
@@ -69,7 +70,7 @@ public class Query implements Serializable {
     /**
      * Returns the next tuple, or throws NoSuchElementException if the iterator
      * is closed.
-     * 
+     *
      * @return The next tuple in the iterator
      * @throws DbException
      *             If there is an error in the database system

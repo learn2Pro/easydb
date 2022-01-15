@@ -1,9 +1,11 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
- * Interface for values of fields in tuples in SimpleDB.
+ * Interface for values of fields in tuples in
  */
 public interface Field extends Serializable{
     /**
@@ -27,7 +29,7 @@ public interface Field extends Serializable{
      * @return type of this field
      */
     public Type getType();
-    
+
     /**
      * Hash code.
      * Different Field objects representing the same value should probably

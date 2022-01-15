@@ -1,9 +1,16 @@
 
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
-import java.util.*;
-import java.lang.reflect.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
 LogFile implements the recovery subsystem of SimpleDb.  This class is
@@ -138,7 +145,7 @@ public class LogFile {
     public synchronized int getTotalRecords() {
         return totalRecords;
     }
-    
+
     /** Write an abort record to the log for the specified tid, force
         the log to disk, and perform a rollback
         @param tid The aborting transaction.
@@ -192,7 +199,7 @@ public class LogFile {
         @param before The before image of the page
         @param after The after image of the page
 
-        @see simpledb.Page#getBeforeImage
+        @see Page#getBeforeImage
     */
     public  synchronized void logWrite(TransactionId tid, Page before,
                                        Page after)

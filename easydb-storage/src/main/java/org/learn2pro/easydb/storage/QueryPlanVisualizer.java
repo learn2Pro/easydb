@@ -1,9 +1,9 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Iterator;
-import simpledb.TupleDesc.TDItem;
+import org.learn2pro.easydb.storage.TupleDesc.TDItem;
 
 public class QueryPlanVisualizer {
 
@@ -269,7 +269,7 @@ public class QueryPlanVisualizer {
                     card = (Integer) plan.getClass().getMethod("getEstimatedCardinality").invoke(plan);
                 } catch (Exception e) {
                     e.printStackTrace();
-                } 
+                }
 
                 thisNode.text = String.format("%1$s,card:%2$d", name,card);
                 int upBarShift = parentUpperBarStartShift;
@@ -295,7 +295,7 @@ public class QueryPlanVisualizer {
                 }
                 thisNode.height = currentDepth;
             }
-            else if (plan.getClass().getName().equals("simpledb.Rename"))
+            else if (plan.getClass().getName().equals("Rename"))
             {
                 String newName=null;
                 int fieldIdx=0;
@@ -304,7 +304,7 @@ public class QueryPlanVisualizer {
                     fieldIdx = (Integer) plan.getClass().getMethod("renamedField", (Class<?>[])null).invoke(plan);
                 } catch (Exception e) {
                     e.printStackTrace();
-                } 
+                }
                 String oldName = plan.getChildren()[0].getTupleDesc().getFieldName(fieldIdx);
                 thisNode.text = String.format("%1$s,%2$s->%3$s,card:%4$d", RENAME,oldName,newName,plan.getEstimatedCardinality());
                 int upBarShift = parentUpperBarStartShift;

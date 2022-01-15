@@ -1,16 +1,19 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.Predicate.Op;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.*;
-
+import java.util.NoSuchElementException;
+import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import junit.framework.JUnit4TestAdapter;
+import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class BTreeFileReadTest extends SimpleDbTestBase {
 	private BTreeFile f;
@@ -51,8 +54,8 @@ public class BTreeFileReadTest extends SimpleDbTestBase {
 	 * Unit test for BTreeFile.getTupleDesc()
 	 */
 	@Test
-	public void getTupleDesc() throws Exception {    	
-		assertEquals(td, f.getTupleDesc());        
+	public void getTupleDesc() throws Exception {
+		assertEquals(td, f.getTupleDesc());
 	}
 	/**
 	 * Unit test for BTreeFile.numPages()

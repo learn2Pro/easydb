@@ -1,7 +1,7 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /** Unique identifier for BTreeInternalPage, BTreeLeafPage, BTreeHeaderPage
- *  and BTreeRootPtrPage objects. 
+ *  and BTreeRootPtrPage objects.
  */
 public class BTreePageId implements PageId {
 

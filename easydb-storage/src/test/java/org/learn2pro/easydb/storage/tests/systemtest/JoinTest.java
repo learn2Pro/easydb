@@ -1,12 +1,18 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.junit.Test;
-
-import simpledb.*;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.Join;
+import org.learn2pro.easydb.storage.JoinPredicate;
+import org.learn2pro.easydb.storage.Predicate;
+import org.learn2pro.easydb.storage.SeqScan;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
 
 public class JoinTest extends SimpleDbTestBase {
     private static final int COLUMNS = 2;

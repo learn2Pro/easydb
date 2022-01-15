@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
 
@@ -46,7 +46,7 @@ public interface Aggregator extends Serializable {
         public static Op getOp(int i) {
             return values()[i];
         }
-        
+
         public String toString()
         {
         	if (this==MIN)
@@ -78,8 +78,8 @@ public interface Aggregator extends Serializable {
 
     /**
      * Create a OpIterator over group aggregate results.
-     * @see simpledb.TupleIterator for a possible helper
+     * @see TupleIterator for a possible helper
      */
     public OpIterator iterator();
-    
+
 }

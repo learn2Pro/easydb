@@ -1,10 +1,15 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * Each instance of BTreeLeafPage stores data for one page of a BTreeFile and 
+ * Each instance of BTreeLeafPage stores data for one page of a BTreeFile and
  * implements the Page interface that is used by BufferPool.
  *
  * @see BTreeFile
@@ -15,7 +20,7 @@ public class BTreeLeafPage extends BTreePage {
 	private final byte header[];
 	private final Tuple tuples[];
 	private final int numSlots;
-	
+
 	private int leftSibling; // leaf node or 0
 	private int rightSibling; // leaf node or 0
 
@@ -43,7 +48,7 @@ public class BTreeLeafPage extends BTreePage {
 	/**
 	 * Create a BTreeLeafPage from a set of bytes of data read from disk.
 	 * The format of a BTreeLeafPage is a set of header bytes indicating
-	 * the slots of the page that are in use, and some number of tuple slots, 
+	 * the slots of the page that are in use, and some number of tuple slots,
 	 * as well as some extra bytes for the parent and sibling pointers.
 	 *  Specifically, the number of tuples is equal to: <p>
 	 *          floor((BufferPool.getPageSize()*8 - extra bytes*8) / (tuple size * 8 + 1))
@@ -56,7 +61,7 @@ public class BTreeLeafPage extends BTreePage {
 	 * @see Database#getCatalog
 	 * @see Catalog#getTupleDesc
 	 * @see BufferPool#getPageSize()
-	 * 
+	 *
 	 * @param id - the id of this page
 	 * @param data - the raw data of this page
 	 * @param key - the field which the index is keyed on
@@ -106,13 +111,13 @@ public class BTreeLeafPage extends BTreePage {
 		setBeforeImage();
 	}
 
-	/** 
+	/**
 	 * Retrieve the maximum number of tuples this page can hold.
 	 */
-	public int getMaxTuples() {        
+	public int getMaxTuples() {
 		int bitsPerTupleIncludingHeader = td.getSize() * 8 + 1;
 		// extraBits are: left sibling pointer, right sibling pointer, parent pointer
-		int extraBits = 3 * INDEX_SIZE * 8; 
+		int extraBits = 3 * INDEX_SIZE * 8;
 		int tuplesPerPage = (BufferPool.getPageSize()*8 - extraBits) / bitsPerTupleIncludingHeader; //round down
 		return tuplesPerPage;
 	}
@@ -120,7 +125,7 @@ public class BTreeLeafPage extends BTreePage {
 	/**
 	 * Computes the number of bytes in the header of a page in a BTreeFile with each tuple occupying tupleSize bytes
 	 */
-	private int getHeaderSize() {        
+	private int getHeaderSize() {
 		int tuplesPerPage = getMaxTuples();
 		int hb = (tuplesPerPage / 8);
 		if (hb * 8 < tuplesPerPage) hb++;
@@ -299,7 +304,7 @@ public class BTreeLeafPage extends BTreePage {
 	}
 
 	/**
-	 * Adds the specified tuple to the page such that all records remain in sorted order;  
+	 * Adds the specified tuple to the page such that all records remain in sorted order;
 	 * the tuple should be updated to reflect
 	 *  that it is now stored on this page.
 	 * @throws DbException if the page is full (no empty slots) or tupledesc
@@ -310,7 +315,7 @@ public class BTreeLeafPage extends BTreePage {
 		if (!t.getTupleDesc().equals(td))
 			throw new DbException("type mismatch, in addTuple");
 
-		// find the first empty slot 
+		// find the first empty slot
 		int emptySlot = -1;
 		for (int i=0; i<numSlots; i++) {
 			if (!isSlotUsed(i)) {
@@ -330,7 +335,7 @@ public class BTreeLeafPage extends BTreePage {
 				if(tuples[i].getField(keyField).compare(Predicate.Op.LESS_THAN_OR_EQ, key))
 					lessOrEqKey = i;
 				else
-					break;	
+					break;
 			}
 		}
 

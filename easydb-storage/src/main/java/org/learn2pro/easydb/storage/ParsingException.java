@@ -1,5 +1,4 @@
-package simpledb;
-import java.lang.Exception;
+package org.learn2pro.easydb.storage;
 
 public class ParsingException extends Exception {
     public ParsingException(String string) {

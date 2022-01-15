@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /**
  * Knows how to compute some aggregate over a set of StringFields.

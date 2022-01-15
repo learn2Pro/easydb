@@ -1,9 +1,13 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
- * Each instance of BTreeHeaderPage stores data for one page of a BTreeFile and 
+ * Each instance of BTreeHeaderPage stores data for one page of a BTreeFile and
  * implements the Page interface that is used by BufferPool.
  *
  * @see BTreeFile
@@ -13,7 +17,7 @@ import java.io.*;
 public class BTreeHeaderPage implements Page {
 	private volatile boolean dirty = false;
 	private volatile TransactionId dirtier = null;
-	
+
 	final static int INDEX_SIZE = Type.INT_TYPE.getLen();
 
 	final BTreePageId pid;
@@ -32,7 +36,7 @@ public class BTreeHeaderPage implements Page {
 	 * header pages, followed by a set of bytes indicating which pages in the file
 	 * are used or available
 	 * @see BufferPool#getPageSize()
-	 * 
+	 *
 	 */
 	public BTreeHeaderPage(BTreePageId id, byte[] data) throws IOException {
 		this.pid = id;
@@ -75,16 +79,16 @@ public class BTreeHeaderPage implements Page {
 	/**
 	 * Computes the number of bytes in the header while saving room for pointers
 	 */
-	private static int getHeaderSize() {        
+	private static int getHeaderSize() {
 		// pointerBytes: nextPage and prevPage pointers
-		int pointerBytes = 2 * INDEX_SIZE; 
+		int pointerBytes = 2 * INDEX_SIZE;
 		return BufferPool.getPageSize() - pointerBytes;
 	}
 
 	/**
 	 * Computes the number of slots in the header
 	 */
-	public static int getNumSlots() {        
+	public static int getNumSlots() {
 		return getHeaderSize() * 8;
 	}
 

@@ -1,23 +1,13 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.Test;
-
-import simpledb.BufferPool;
-import simpledb.Database;
-import simpledb.DbException;
-import simpledb.HeapFile;
-import simpledb.HeapFileEncoder;
-import simpledb.Parser;
-import simpledb.TableStats;
-import simpledb.Transaction;
-import simpledb.TransactionAbortedException;
-import simpledb.Utility;
+import org.learn2pro.easydb.storage.*;
 
 public class QueryTest {
-	
+
 	/**
 	 * Given a matrix of tuples from SystemTestUtil.createRandomHeapFile, create an identical HeapFile table
 	 * @param tuples Tuples to create a HeapFile from
@@ -32,34 +22,34 @@ public class QueryTest {
         HeapFileEncoder.convert(tuples, temp, BufferPool.getPageSize(), columns);
         return Utility.openHeapFile(columns, colPrefix, temp);
 	}
-	
+
 	@Test(timeout=20000) public void queryTest() throws IOException, DbException, TransactionAbortedException {
 		// This test is intended to approximate the join described in the
 		// "Query Planning" section of 2009 Quiz 1,
 		// though with some minor variation due to limitations in simpledb
 		// and to only test your integer-heuristic code rather than
-		// string-heuristic code.		
+		// string-heuristic code.
 		final int IO_COST = 101;
-		
+
 //		HashMap<String, TableStats> stats = new HashMap<String, TableStats>();
-		
+
 		// Create all of the tables, and add them to the catalog
 		ArrayList<ArrayList<Integer>> empTuples = new ArrayList<ArrayList<Integer>>();
-		HeapFile emp = SystemTestUtil.createRandomHeapFile(6, 100000, null, empTuples, "c");	
+		HeapFile emp = SystemTestUtil.createRandomHeapFile(6, 100000, null, empTuples, "c");
 		Database.getCatalog().addTable(emp, "emp");
-		
+
 		ArrayList<ArrayList<Integer>> deptTuples = new ArrayList<ArrayList<Integer>>();
-		HeapFile dept = SystemTestUtil.createRandomHeapFile(3, 1000, null, deptTuples, "c");	
+		HeapFile dept = SystemTestUtil.createRandomHeapFile(3, 1000, null, deptTuples, "c");
 		Database.getCatalog().addTable(dept, "dept");
-		
+
 		ArrayList<ArrayList<Integer>> hobbyTuples = new ArrayList<ArrayList<Integer>>();
 		HeapFile hobby = SystemTestUtil.createRandomHeapFile(6, 1000, null, hobbyTuples, "c");
 		Database.getCatalog().addTable(hobby, "hobby");
-		
+
 		ArrayList<ArrayList<Integer>> hobbiesTuples = new ArrayList<ArrayList<Integer>>();
 		HeapFile hobbies = SystemTestUtil.createRandomHeapFile(2, 200000, null, hobbiesTuples, "c");
 		Database.getCatalog().addTable(hobbies, "hobbies");
-		
+
 		// Get TableStats objects for each of the tables that we just generated.
 		TableStats.setTableStats("emp", new TableStats(Database.getCatalog().getTableId("emp"), IO_COST));
 		TableStats.setTableStats("dept", new TableStats(Database.getCatalog().getTableId("dept"), IO_COST));
@@ -67,12 +57,12 @@ public class QueryTest {
 		TableStats.setTableStats("hobbies", new TableStats(Database.getCatalog().getTableId("hobbies"), IO_COST));
 
 //		Parser.setStatsMap(stats);
-		
+
 		Transaction t = new Transaction();
 		t.start();
 		Parser p = new Parser();
 		p.setTransaction(t);
-		
+
 		// Each of these should return around 20,000
 		// This Parser implementation currently just dumps to stdout, so checking that isn't terribly clean.
 		// So, don't bother for now; future TODO.
@@ -80,7 +70,7 @@ public class QueryTest {
 		// even though the worst case takes a very long time.
 		p.processNextStatement("SELECT * FROM emp,dept,hobbies,hobby WHERE emp.c1 = dept.c0 AND hobbies.c0 = emp.c2 AND hobbies.c1 = hobby.c0 AND emp.c3 < 1000;");
 	}
-	
+
 	/**
 	 * Build a large series of tables; then run the command-line query code and execute a query.
 	 * The number of tables is large enough that the query will only succeed within the
@@ -91,16 +81,16 @@ public class QueryTest {
 	// Not required for Lab 4
 	/*@Test(timeout=60000) public void hashJoinTest() throws IOException, DbException, TransactionAbortedException {
 		final int IO_COST = 103;
-		
+
 		HashMap<String, TableStats> stats = new HashMap<String,TableStats>();
-				
+
 		ArrayList<ArrayList<Integer>> smallHeapFileTuples = new ArrayList<ArrayList<Integer>>();
-		HeapFile smallHeapFileA = SystemTestUtil.createRandomHeapFile(2, 100, Integer.MAX_VALUE, null, smallHeapFileTuples, "c");		
-		HeapFile smallHeapFileB = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");		
-		HeapFile smallHeapFileC = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");		
-		HeapFile smallHeapFileD = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");		
-		HeapFile smallHeapFileE = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");		
-		HeapFile smallHeapFileF = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");		
+		HeapFile smallHeapFileA = SystemTestUtil.createRandomHeapFile(2, 100, Integer.MAX_VALUE, null, smallHeapFileTuples, "c");
+		HeapFile smallHeapFileB = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
+		HeapFile smallHeapFileC = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
+		HeapFile smallHeapFileD = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
+		HeapFile smallHeapFileE = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
+		HeapFile smallHeapFileF = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
 		HeapFile smallHeapFileG = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
 		HeapFile smallHeapFileH = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
 		HeapFile smallHeapFileI = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
@@ -109,7 +99,7 @@ public class QueryTest {
 		HeapFile smallHeapFileL = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
 		HeapFile smallHeapFileM = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
 		HeapFile smallHeapFileN = createDuplicateHeapFile(smallHeapFileTuples, 2, "c");
-		
+
 		ArrayList<ArrayList<Integer>> bigHeapFileTuples = new ArrayList<ArrayList<Integer>>();
 		for (int i = 0; i < 1000; i++) {
 			bigHeapFileTuples.add( smallHeapFileTuples.get( i%100 ) );
@@ -132,7 +122,7 @@ public class QueryTest {
 		Database.getCatalog().addTable(smallHeapFileL, "l");
 		Database.getCatalog().addTable(smallHeapFileM, "m");
 		Database.getCatalog().addTable(smallHeapFileN, "n");
-		
+
 		stats.put("bigTable", new TableStats(bigHeapFile.getId(), IO_COST));
 		stats.put("a", new TableStats(smallHeapFileA.getId(), IO_COST));
 		stats.put("b", new TableStats(smallHeapFileB.getId(), IO_COST));
@@ -150,11 +140,11 @@ public class QueryTest {
 		stats.put("n", new TableStats(smallHeapFileG.getId(), IO_COST));
 
 		Parser.setStatsMap(stats);
-		
+
 		Transaction t = new Transaction();
 		t.start();
 		Parser.setTransaction(t);
-		
+
 		// Each of these should return around 20,000
 		// This Parser implementation currently just dumps to stdout, so checking that isn't terribly clean.
 		// So, don't bother for now; future TODO.

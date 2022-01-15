@@ -1,14 +1,13 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.util.Arrays;
-
-import org.junit.Test;
-
 import junit.framework.Assert;
-import simpledb.*;
+import org.junit.Test;
+import org.learn2pro.easydb.storage.*;
 
 /**
  * Creates a heap file with 1024*500 tuples with two integer fields each.  Clears the buffer pool,

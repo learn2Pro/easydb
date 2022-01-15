@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,15 +6,19 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import simpledb.TestUtil.SkeletonFile;
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.HeapPage;
+import org.learn2pro.easydb.storage.HeapPageId;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class HeapPageWriteTest extends SimpleDbTestBase {
 
@@ -23,15 +27,17 @@ public class HeapPageWriteTest extends SimpleDbTestBase {
     /**
      * Set up initial resources for each unit test.
      */
-    @Before public void addTable() throws IOException {
+    @Before
+    public void addTable() throws IOException {
         this.pid = new HeapPageId(-1, -1);
         Database.getCatalog().addTable(new SkeletonFile(-1, Utility.getTupleDesc(2)), SystemTestUtil.getUUID());
     }
-    
+
     /**
      * Unit test for HeapPage.isDirty()
      */
-    @Test public void testDirty() throws Exception {
+    @Test
+    public void testDirty() throws Exception {
         TransactionId tid = new TransactionId();
         HeapPage page = new HeapPage(pid, HeapPageReadTest.EXAMPLE_DATA);
         page.markDirty(true, tid);
@@ -47,7 +53,8 @@ public class HeapPageWriteTest extends SimpleDbTestBase {
     /**
      * Unit test for HeapPage.addTuple()
      */
-    @Test public void addTuple() throws Exception {
+    @Test
+    public void addTuple() throws Exception {
         HeapPage page = new HeapPage(pid, HeapPageReadTest.EXAMPLE_DATA);
         int free = page.getNumEmptySlots();
 
@@ -57,11 +64,11 @@ public class HeapPageWriteTest extends SimpleDbTestBase {
         for (int i = 0; i < free; ++i) {
             Tuple addition = Utility.getHeapTuple(i, 2);
             page.insertTuple(addition);
-            assertEquals(free-i-1, page.getNumEmptySlots());
+            assertEquals(free - i - 1, page.getNumEmptySlots());
 
             // loop through the iterator to ensure that the tuple actually exists
             // on the page
-            Iterator<Tuple >it = page.iterator();
+            Iterator<Tuple> it = page.iterator();
             boolean found = false;
             while (it.hasNext()) {
                 Tuple tup = it.next();
@@ -88,8 +95,8 @@ public class HeapPageWriteTest extends SimpleDbTestBase {
     /**
      * Unit test for HeapPage.deleteTuple() with false tuples
      */
-    @Test(expected=DbException.class)
-        public void deleteNonexistentTuple() throws Exception {
+    @Test(expected = DbException.class)
+    public void deleteNonexistentTuple() throws Exception {
         HeapPage page = new HeapPage(pid, HeapPageReadTest.EXAMPLE_DATA);
         page.deleteTuple(Utility.getHeapTuple(2, 2));
     }
@@ -97,15 +104,17 @@ public class HeapPageWriteTest extends SimpleDbTestBase {
     /**
      * Unit test for HeapPage.deleteTuple()
      */
-    @Test public void deleteTuple() throws Exception {
+    @Test
+    public void deleteTuple() throws Exception {
         HeapPage page = new HeapPage(pid, HeapPageReadTest.EXAMPLE_DATA);
         int free = page.getNumEmptySlots();
 
         // first, build a list of the tuples on the page.
         Iterator<Tuple> it = page.iterator();
         LinkedList<Tuple> tuples = new LinkedList<Tuple>();
-        while (it.hasNext())
+        while (it.hasNext()) {
             tuples.add(it.next());
+        }
         Tuple first = tuples.getFirst();
 
         // now, delete them one-by-one from both the front and the end.

@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 //import java.util.HashMap;
 import java.util.Map;
@@ -6,13 +6,13 @@ import java.util.Map;
 /**
  * A utility class, which computes the estimated cardinalities of an operator
  * tree.
- * 
+ *
  * All methods have been fully provided. No extra codes are required.
  */
 public class OperatorCardinality {
 
     /**
-     * 
+     *
      * @param tableAliasToId
      *            table alias to table id mapping
      * @param tableStats

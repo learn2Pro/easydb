@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ public class Predicate implements Serializable {
         /**
          * Interface to access operations by integer value for command-line
          * convenience.
-         * 
+         *
          * @param i
          *            a valid integer Op index
          */
@@ -43,10 +43,10 @@ public class Predicate implements Serializable {
         }
 
     }
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param field
      *            field number of passed in tuples to compare against.
      * @param op
@@ -75,7 +75,7 @@ public class Predicate implements Serializable {
         // some code goes here
         return null;
     }
-    
+
     /**
      * @return the operand
      */
@@ -84,13 +84,13 @@ public class Predicate implements Serializable {
         // some code goes here
         return null;
     }
-    
+
     /**
      * Compares the field number of t specified in the constructor to the
      * operand field specified in the constructor using the operator specific in
      * the constructor. The comparison can be made through Field's compare
      * method.
-     * 
+     *
      * @param t
      *            The tuple to compare against
      * @return true if the comparison is true, false otherwise.

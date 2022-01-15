@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /** PageId is an interface to a specific page of a specific table. */
 public interface PageId {

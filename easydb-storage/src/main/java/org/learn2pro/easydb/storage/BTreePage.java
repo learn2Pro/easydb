@@ -1,9 +1,9 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
- * Each instance of BTreeInternalPage stores data for one page of a BTreeFile and 
+ * Each instance of BTreeInternalPage stores data for one page of a BTreeFile and
  * implements the Page interface that is used by BufferPool.
  *
  * @see BTreeFile
@@ -28,13 +28,13 @@ public abstract class BTreePage implements Page {
 	 * Create a BTreeInternalPage from a set of bytes of data read from disk.
 	 * The format of a BTreeInternalPage is a set of header bytes indicating
 	 * the slots of the page that are in use, some number of entry slots, and extra
-	 * bytes for the parent pointer, one extra child pointer (a node with m entries 
-	 * has m+1 pointers to children), and the category of all child pages (either 
+	 * bytes for the parent pointer, one extra child pointer (a node with m entries
+	 * has m+1 pointers to children), and the category of all child pages (either
 	 * leaf or internal).
 	 *  Specifically, the number of entries is equal to: <p>
 	 *          floor((BufferPool.getPageSize()*8 - extra bytes*8) / (entry size * 8 + 1))
 	 * <p> where entry size is the size of entries in this index node
-	 * (key + child pointer), which can be determined via the key field and 
+	 * (key + child pointer), which can be determined via the key field and
 	 * {@link Catalog#getTupleDesc}.
 	 * The number of 8-bit header words is equal to:
 	 * <p>
@@ -43,7 +43,7 @@ public abstract class BTreePage implements Page {
 	 * @see Database#getCatalog
 	 * @see Catalog#getTupleDesc
 	 * @see BufferPool#getPageSize()
-	 * 
+	 *
 	 * @param id - the id of this page
 	 * @param data - the raw data of this page
 	 * @param key - the field which the index is keyed on
@@ -132,7 +132,7 @@ public abstract class BTreePage implements Page {
 	 * Returns the number of empty slots on this page.
 	 */
 	public abstract int getNumEmptySlots();
-	
+
 	/**
 	 * Returns true if associated slot on this page is filled.
 	 */

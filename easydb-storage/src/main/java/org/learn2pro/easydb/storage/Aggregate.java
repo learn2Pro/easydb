@@ -1,6 +1,6 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
  * The Aggregation operator that computes an aggregate (e.g., sum, avg, max,
@@ -13,12 +13,12 @@ public class Aggregate extends Operator {
 
     /**
      * Constructor.
-     * 
+     *
      * Implementation hint: depending on the type of afield, you will want to
      * construct an {@link IntegerAggregator} or {@link StringAggregator} to help
      * you with your implementation of readNext().
-     * 
-     * 
+     *
+     *
      * @param child
      *            The OpIterator that is feeding us tuples.
      * @param afield
@@ -36,7 +36,7 @@ public class Aggregate extends Operator {
     /**
      * @return If this aggregate is accompanied by a groupby, return the groupby
      *         field index in the <b>INPUT</b> tuples. If not, return
-     *         {@link simpledb.Aggregator#NO_GROUPING}
+     *         {@link Aggregator#NO_GROUPING}
      * */
     public int groupField() {
 	// some code goes here
@@ -108,7 +108,7 @@ public class Aggregate extends Operator {
      * this will have one field - the aggregate column. If there is a group by
      * field, the first field will be the group by field, and the second will be
      * the aggregate value column.
-     * 
+     *
      * The name of an aggregate column should be informative. For example:
      * "aggName(aop) (child_td.getFieldName(afield))" where aop and afield are
      * given in the constructor, and child_td is the TupleDesc of the child
@@ -133,5 +133,5 @@ public class Aggregate extends Operator {
     public void setChildren(OpIterator[] children) {
 	// some code goes here
     }
-    
+
 }

@@ -1,11 +1,13 @@
-package simpledb.systemtest;
+package org.learn2pro.easydb.storage.tests.systemtest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import simpledb.*;
-
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.learn2pro.easydb.storage.*;
 
 public class InsertTest extends SimpleDbTestBase {
     private void validateInsert(int columns, int sourceRows, int destinationRows)

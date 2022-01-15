@@ -1,17 +1,29 @@
-package simpledb;
+package org.learn2pro.easydb.storage.tests;
 
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.*;
+import java.util.NoSuchElementException;
+import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import junit.framework.JUnit4TestAdapter;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbFileIterator;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.HeapPage;
+import org.learn2pro.easydb.storage.HeapPageId;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class HeapFileReadTest extends SimpleDbTestBase {
+
     private HeapFile hf;
     private TransactionId tid;
     private TupleDesc td;
@@ -50,9 +62,10 @@ public class HeapFileReadTest extends SimpleDbTestBase {
      * Unit test for HeapFile.getTupleDesc()
      */
     @Test
-    public void getTupleDesc() throws Exception {    	
-        assertEquals(td, hf.getTupleDesc());        
+    public void getTupleDesc() throws Exception {
+        assertEquals(td, hf.getTupleDesc());
     }
+
     /**
      * Unit test for HeapFile.numPages()
      */

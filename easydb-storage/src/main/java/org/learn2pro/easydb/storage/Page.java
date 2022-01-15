@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /**
  * Page is the interface used to represent pages that are resident in the

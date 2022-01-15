@@ -1,21 +1,23 @@
-package simpledb;
-
-import simpledb.BTreeFileEncoder.TupleComparator;
-import simpledb.TestUtil.SkeletonFile;
-import simpledb.systemtest.SimpleDbTestBase;
-import simpledb.systemtest.SystemTestUtil;
-
-//import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import org.junit.Before;
-import org.junit.Test;
+package org.learn2pro.easydb.storage.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import junit.framework.JUnit4TestAdapter;
+import org.junit.Before;
+import org.junit.Test;
+import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.BTreeFileEncoder.TupleComparator;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;
 
 public class BTreeLeafPageTest extends SimpleDbTestBase {
 	private BTreePageId pid;
@@ -57,7 +59,7 @@ public class BTreeLeafPageTest extends SimpleDbTestBase {
 
 		// Convert it to a BTreeLeafPage
 		try {
-			EXAMPLE_DATA = BTreeFileEncoder.convertToLeafPage(tuples, 
+			EXAMPLE_DATA = BTreeFileEncoder.convertToLeafPage(tuples,
 					BufferPool.getPageSize(), 2, new Type[]{Type.INT_TYPE, Type.INT_TYPE}, 0);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -226,7 +228,7 @@ public class BTreeLeafPageTest extends SimpleDbTestBase {
 	 * Unit test for BTreeLeafPage.addTuple()
 	 */
 	@Test public void addTuple() throws Exception {
-		// create two blank pages -- one keyed on the first field, 
+		// create two blank pages -- one keyed on the first field,
 		// the second keyed on the second field
 		byte[] data = BTreeLeafPage.createEmptyPageData();
 		BTreeLeafPage page0 = new BTreeLeafPage(pid, data, 0);

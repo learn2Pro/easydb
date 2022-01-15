@@ -1,5 +1,6 @@
-package simpledb;
-import java.util.*;
+package org.learn2pro.easydb.storage;
+
+import java.util.NoSuchElementException;
 
 /**
  * DbFileIterator is the iterator interface that all SimpleDB Dbfile should

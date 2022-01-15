@@ -1,6 +1,4 @@
-package simpledb;
-
-import java.lang.Exception;
+package org.learn2pro.easydb.storage;
 
 /** Exception that is thrown when a deadlock occurs. */
 public class DeadlockException extends Exception {

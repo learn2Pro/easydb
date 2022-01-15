@@ -1,9 +1,9 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
- * BTreeScan is an operator which reads tuples in sorted order 
+ * BTreeScan is an operator which reads tuples in sorted order
  * according to a predicate
  */
 public class BTreeScan implements OpIterator {
@@ -21,7 +21,7 @@ public class BTreeScan implements OpIterator {
 	/**
 	 * Creates a B+ tree scan over the specified table as a part of the
 	 * specified transaction.
-	 * 
+	 *
 	 * @param tid
 	 *            The transaction this scan is running as a part of.
 	 * @param tableid
@@ -53,7 +53,7 @@ public class BTreeScan implements OpIterator {
 	}
 
 	/**
-	 * @return Return the alias of the table this operator scans. 
+	 * @return Return the alias of the table this operator scans.
 	 * */
 	public String getAlias()
 	{
@@ -112,7 +112,7 @@ public class BTreeScan implements OpIterator {
 	 * prefixed with the tableAlias string from the constructor. This prefix
 	 * becomes useful when joining tables containing a field(s) with the same
 	 * name.
-	 * 
+	 *
 	 * @return the TupleDesc with field names from the underlying BTreeFile,
 	 *         prefixed with the tableAlias string from the constructor.
 	 */

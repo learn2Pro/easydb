@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ public class JoinPredicate implements Serializable {
 
     /**
      * Constructor -- create a new predicate over two fields of two tuples.
-     * 
+     *
      * @param field1
      *            The field index into the first tuple in the predicate
      * @param field2
@@ -31,26 +31,26 @@ public class JoinPredicate implements Serializable {
     /**
      * Apply the predicate to the two specified tuples. The comparison can be
      * made through Field's compare method.
-     * 
+     *
      * @return true if the tuples satisfy the predicate.
      */
     public boolean filter(Tuple t1, Tuple t2) {
         // some code goes here
         return false;
     }
-    
+
     public int getField1()
     {
         // some code goes here
         return -1;
     }
-    
+
     public int getField2()
     {
         // some code goes here
         return -1;
     }
-    
+
     public Predicate.Op getOperator()
     {
         // some code goes here

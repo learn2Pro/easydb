@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
 
@@ -7,9 +7,9 @@ import java.io.Serializable;
  * @see IndexOpIterator
  */
 public class IndexPredicate implements Serializable {
-	
+
     private static final long serialVersionUID = 1L;
-	
+
     private Predicate.Op op;
     private Field fieldvalue;
 

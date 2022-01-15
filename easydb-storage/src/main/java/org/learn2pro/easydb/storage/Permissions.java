@@ -1,4 +1,4 @@
-package simpledb;
+package org.learn2pro.easydb.storage;
 
 /**
  * Class representing requested permissions to a relation/file.
