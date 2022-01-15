@@ -19,7 +19,6 @@ package org.gibello.zql.data;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
 import org.gibello.zql.ZConstant;
 import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
@@ -83,7 +82,7 @@ public class ZEval {
     } else if(op.equals("BETWEEN") || op.equals("NOT BETWEEN")) {
 
       // Between: borders included
-      ZExpression newexp = new ZExpression("AND", 
+      ZExpression newexp = new ZExpression("AND",
         new ZExpression(">=", pred.getOperand(0), pred.getOperand(1)),
         new ZExpression("<=", pred.getOperand(0), pred.getOperand(2)));
 
@@ -165,11 +164,11 @@ public class ZEval {
   /**
    * evalLike
    * evaluates the LIKE operand
-   * 
+   *
    * @param tuple the tuple to evaluate
    * @param operands the operands
    * @return true-> the expression matches
-   * @throws SQLException 
+   * @throws SQLException
    */
   private boolean evalLike(ZTuple tuple, Vector operands) throws SQLException
   {

@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 import java.util.Vector;
 
 /**
@@ -25,7 +23,7 @@ import java.util.Vector;
 public class ZGroupBy implements java.io.Serializable {
 
   Vector groupby_;
-  ZExp having_ = null;
+  org.gibello.zql.ZExp having_ = null;
 
   /**
    * Create a GROUP BY given a set of Expressions
@@ -37,7 +35,7 @@ public class ZGroupBy implements java.io.Serializable {
    * Initiallize the HAVING part of the GROUP BY
    * @param e An SQL Expression (the HAVING clause)
    */
-  public void setHaving(ZExp e) { having_ = e; }
+  public void setHaving(org.gibello.zql.ZExp e) { having_ = e; }
 
   /**
    * Get the GROUP BY expressions
@@ -49,7 +47,7 @@ public class ZGroupBy implements java.io.Serializable {
    * Get the HAVING clause
    * @return An SQL expression
    */
-  public ZExp getHaving() { return having_; }
+  public org.gibello.zql.ZExp getHaving() { return having_; }
 
   public String toString() {
     StringBuffer buf = new StringBuffer("group by ");

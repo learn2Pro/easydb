@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 import java.util.Vector;
 
 /**
@@ -24,14 +22,14 @@ import java.util.Vector;
  */
 public class ZQuery implements ZStatement, ZExp {
 
-  Vector select_;
-  boolean distinct_ = false;
-  Vector from_;
-  ZExp where_ = null;
-  ZGroupBy groupby_ = null;
-  ZExpression setclause_ = null;
-  Vector orderby_ = null;
-  boolean forupdate_ = false;
+  public Vector select_;
+  public boolean distinct_ = false;
+  public Vector from_;
+  public org.gibello.zql.ZExp where_ = null;
+  public ZGroupBy groupby_ = null;
+  public org.gibello.zql.ZExpression setclause_ = null;
+  public Vector orderby_ = null;
+  public boolean forupdate_ = false;
 
   /**
    * Create a new SELECT statement
@@ -54,7 +52,7 @@ public class ZQuery implements ZStatement, ZExp {
    * Insert a WHERE clause
    * @param w An SQL Expression
    */
-  public void addWhere(ZExp w) { where_ = w; }
+  public void addWhere(org.gibello.zql.ZExp w) { where_ = w; }
 
   /**
    * Insert a GROUP BY...HAVING clause
@@ -66,7 +64,7 @@ public class ZQuery implements ZStatement, ZExp {
    * Insert a SET clause (generally UNION, INTERSECT or MINUS)
    * @param s An SQL Expression (generally UNION, INTERSECT or MINUS)
    */
-  public void addSet(ZExpression s) { setclause_ = s; }
+  public void addSet(org.gibello.zql.ZExpression s) { setclause_ = s; }
 
   /**
    * Insert an ORDER BY clause
@@ -90,7 +88,7 @@ public class ZQuery implements ZStatement, ZExp {
    * Get the WHERE part of the statement
    * @return An SQL Expression or sub-query (ZExpression or ZQuery object)
    */
-  public ZExp getWhere() { return where_; }
+  public org.gibello.zql.ZExp getWhere() { return where_; }
 
   /**
    * Get the GROUP BY...HAVING part of the statement
@@ -100,9 +98,9 @@ public class ZQuery implements ZStatement, ZExp {
 
   /**
    * Get the SET clause (generally UNION, INTERSECT or MINUS)
-   * @return An SQL Expression (generally UNION, INTERSECT or MINUS) 
+   * @return An SQL Expression (generally UNION, INTERSECT or MINUS)
    */
-  public ZExpression getSet() { return setclause_; }
+  public org.gibello.zql.ZExpression getSet() { return setclause_; }
 
   /**
    * Get the ORDER BY clause

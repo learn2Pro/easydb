@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 import java.util.Vector;
 
 /**
@@ -24,14 +22,14 @@ import java.util.Vector;
  */
 public class ZLockTable implements ZStatement {
 
-  boolean nowait_ = false;
-  String lockMode_ = null;
-  Vector tables_ = null;
+  public boolean nowait_ = false;
+  public String lockMode_ = null;
+  public Vector tables_ = null;
 
   public ZLockTable() {}
 
   public void addTables(Vector v) { tables_ = v; }
-  public Vector getTables() { return tables_; } 
+  public Vector getTables() { return tables_; }
   public void setLockMode(String lc) { lockMode_ = new String(lc); }
   public String getLockMode() { return lockMode_; }
   public boolean isNowait() { return nowait_; }

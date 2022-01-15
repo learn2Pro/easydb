@@ -220,7 +220,7 @@ void BasicDataTypeDeclaration():
 /* ---------------- DECLARATIONS SECTION ends here ------------------ */
 
 /* ---------------- Code Section starts here ---------------------- */
-                                
+
 Vector SQLStatements():
 {
   Vector v = new Vector();
@@ -941,7 +941,7 @@ ZExp SQLMultiplicativeExpression():
     e1 = SQLExpotentExpression()
     ( (op = "*" | op = "/") e2 = SQLExpotentExpression() {
       e = new ZExpression(op.toString(), e1);
-      e.addOperand(e2); 
+      e.addOperand(e2);
       e1 = e;
     } )*
     { return e1; }
@@ -972,7 +972,7 @@ ZExp SQLUnaryExpression():
   ZExp e1, e;
 }
 {
-  [ op = "+" |  op = "-"] e1 = SQLPrimaryExpression() { 
+  [ op = "+" |  op = "-"] e1 = SQLPrimaryExpression() {
     if(op == null) e = e1;
     else e = new ZExpression(op.toString(), e1);
     return e;

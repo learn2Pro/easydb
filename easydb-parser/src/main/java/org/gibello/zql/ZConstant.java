@@ -1,3 +1,4 @@
+package org.gibello.zql;
 /*
  * This file is part of Zql.
  *
@@ -14,8 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package org.gibello.zql;
 
 /**
  * ZConstant: a representation of SQL constants

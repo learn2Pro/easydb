@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,15 +15,13 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 /**
  * ZSelectItem: an item in the SELECT part of an SQL query.
  * (The SELECT part of a query is a Vector of ZSelectItem).
  */
-public class ZSelectItem extends ZAliasedName {
+public class ZSelectItem extends org.gibello.zql.ZAliasedName {
 
-  ZExp expression_ = null;
+  org.gibello.zql.ZExp expression_ = null;
   String aggregate_ = null;
 
   /**
@@ -37,19 +35,19 @@ public class ZSelectItem extends ZAliasedName {
    * (example: a.*).
    */
   public ZSelectItem(String fullname) {
-    super(fullname, ZAliasedName.FORM_COLUMN);
-    setAggregate(ZUtils.getAggregateCall(fullname)); //PY.Gibello 21 Apr 2001
+    super(fullname, FORM_COLUMN);
+    setAggregate(org.gibello.zql.ZUtils.getAggregateCall(fullname)); //PY.Gibello 21 Apr 2001
   }
 
   /**
    * @return An SQL Expression if this SELECT item is an expression,
    * a ZConstant if it is a column name,  null if it is a wildcard
    */
-  public ZExp getExpression() {
+  public org.gibello.zql.ZExp getExpression() {
     if(isExpression()) return expression_;
     else if(isWildcard()) return null;
     else {
-      return new ZConstant(getColumn(), ZConstant.COLUMNNAME);
+      return new org.gibello.zql.ZConstant(getColumn(), org.gibello.zql.ZConstant.COLUMNNAME);
     }
   }
 
@@ -58,7 +56,7 @@ public class ZSelectItem extends ZAliasedName {
    * nor wildcard)
    * Example: SELECT a+b FROM table1; (a+b is an expression)
    */
-  public void setExpression(ZExp e) {
+  public void setExpression(org.gibello.zql.ZExp e) {
     expression_ = e;
     strform_ = expression_.toString();
   }
@@ -67,7 +65,7 @@ public class ZSelectItem extends ZAliasedName {
    * @return true if this item is an SQL expression, false if not.
    * (Example: SELECT a+b, c FROM num; -> a+b is an expression, not c)
    */
-  public boolean isExpression() { return (expression_ != null && expression_ instanceof ZExpression); }
+  public boolean isExpression() { return (expression_ != null && expression_ instanceof org.gibello.zql.ZExpression); }
 
   /**
    * Initialize an aggregate function on this item

@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -14,8 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package org.gibello.zql;
 
 import java.util.Hashtable;
 

@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -29,7 +27,7 @@ public class ZUpdate implements ZStatement {
   String table_;
   String alias_ = null;
   Hashtable set_;
-  ZExp where_ = null;
+  org.gibello.zql.ZExp where_ = null;
   Vector columns_ = null;
 
   /**
@@ -71,7 +69,7 @@ public class ZUpdate implements ZStatement {
    * @param col The column name
    * @param val The column value
    */
-  public void addColumnUpdate(String col, ZExp val) {
+  public void addColumnUpdate(String col, org.gibello.zql.ZExp val) {
     if(set_ == null) set_ = new Hashtable();
     set_.put(col, val);
     if(columns_ == null) columns_ = new Vector();
@@ -85,7 +83,7 @@ public class ZUpdate implements ZStatement {
    * @return a ZExp, like a ZConstant representing a value, or a more complex
    * SQL expression.
    */
-  public ZExp getColumnUpdate(String col) { return (ZExp)set_.get(col); }
+  public org.gibello.zql.ZExp getColumnUpdate(String col) { return (org.gibello.zql.ZExp)set_.get(col); }
 
   /**
    * Get the SQL expression that specifies a given column's update value.
@@ -97,11 +95,11 @@ public class ZUpdate implements ZStatement {
    * @return a ZExp, like a ZConstant representing a value, or a more complex
    * SQL expression.
    */
-  public ZExp getColumnUpdate(int index) {
+  public org.gibello.zql.ZExp getColumnUpdate(int index) {
     if(--index < 0) return null;
     if(columns_ == null || index >= columns_.size()) return null;
     String col = (String)columns_.elementAt(index);
-    return (ZExp)set_.get(col);
+    return (org.gibello.zql.ZExp)set_.get(col);
   }
 
   /**
@@ -130,13 +128,13 @@ public class ZUpdate implements ZStatement {
    * Insert a WHERE... clause in the UPDATE statement
    * @param w An SQL Expression compatible with a WHERE... clause.
    */
-  public void addWhere(ZExp w) { where_ = w; }
+  public void addWhere(org.gibello.zql.ZExp w) { where_ = w; }
 
   /**
    * Get the WHERE clause of this UPDATE statement.
    * @return An SQL Expression compatible with a WHERE... clause.
    */
-  public ZExp getWhere() { return where_; }
+  public org.gibello.zql.ZExp getWhere() { return where_; }
 
   public String toString() {
     StringBuffer buf = new StringBuffer("update " + table_);
@@ -150,7 +148,7 @@ public class ZUpdate implements ZStatement {
     while(e.hasMoreElements()) {
       String key = e.nextElement().toString();
       if(!first) buf.append(", ");
-      buf.append(key + "=" + set_.get(key).toString()); 
+      buf.append(key + "=" + set_.get(key).toString());
       first = false;
     }
 

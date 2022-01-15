@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,17 +15,15 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 import java.util.Vector;
 
 
 /**
  * ZExpression: an SQL Expression
- * An SQL expression is an operator and one or more operands 
+ * An SQL expression is an operator and one or more operands
  * Example: a AND b AND c -> operator = AND, operands = (a, b, c)
  */
-public class ZExpression implements ZExp {
+public class ZExpression implements org.gibello.zql.ZExp {
 
   String op_ = null;
   Vector operands_ = null;
@@ -43,7 +41,7 @@ public class ZExpression implements ZExp {
    * @param op The operator
    * @param o1 The 1st operand
    */
-  public ZExpression(String op, ZExp o1) {
+  public ZExpression(String op, org.gibello.zql.ZExp o1) {
     op_ = new String(op);
     addOperand(o1);
   }
@@ -54,7 +52,7 @@ public class ZExpression implements ZExp {
    * @param o1 The 1st operand
    * @param o2 The 2nd operand
    */
-  public ZExpression(String op, ZExp o1, ZExp o2) {
+  public ZExpression(String op, org.gibello.zql.ZExp o1, org.gibello.zql.ZExp o2) {
     op_ = new String(op);
     addOperand(o1);
     addOperand(o2);
@@ -86,7 +84,7 @@ public class ZExpression implements ZExp {
    * Add an operand to the current expression.
    * @param o The operand to add.
    */
-  public void addOperand(ZExp o) {
+  public void addOperand(org.gibello.zql.ZExp o) {
     if(operands_ == null) operands_ = new Vector();
     operands_.addElement(o);
   }
@@ -96,9 +94,9 @@ public class ZExpression implements ZExp {
    * @param pos The operand index, starting at 0.
    * @return The operand at the specified index, null if out of bounds.
    */
-  public ZExp getOperand(int pos) {
+  public org.gibello.zql.ZExp getOperand(int pos) {
     if(operands_ == null || pos >= operands_.size()) return null;
-    return (ZExp)operands_.elementAt(pos);
+    return (org.gibello.zql.ZExp)operands_.elementAt(pos);
   }
 
   /**
@@ -119,7 +117,7 @@ public class ZExpression implements ZExp {
     StringBuffer buf = new StringBuffer("(");
     buf.append(op_);
     for(int i = 0; i < nbOperands(); i++) {
-      ZExp opr = getOperand(i);
+      org.gibello.zql.ZExp opr = getOperand(i);
       if(opr instanceof ZExpression)
         buf.append(" " + ((ZExpression)opr).toReversePolish()); // Warning recursive call
       else if(opr instanceof ZQuery)
@@ -135,20 +133,20 @@ public class ZExpression implements ZExp {
 
     if(op_.equals("?")) return op_; // For prepared columns ("?")
 
-    if(ZUtils.isCustomFunction(op_) >= 0)
+    if(org.gibello.zql.ZUtils.isCustomFunction(op_) >= 0)
       return formatFunction();
 
     StringBuffer buf = new StringBuffer();
     if(needPar(op_)) buf.append("(");
 
-    ZExp operand;
+    org.gibello.zql.ZExp operand;
     switch(nbOperands()) {
 
       case 1:
         operand = getOperand(0);
-        if(operand instanceof ZConstant) {
+        if(operand instanceof org.gibello.zql.ZConstant) {
           // Operator may be an aggregate function (MAX, SUM...)
-          if(ZUtils.isAggregate(op_))
+          if(org.gibello.zql.ZUtils.isAggregate(op_))
            buf.append(op_ + "(" + operand.toString() + ")");
           else if(op_.equals("IS NULL") || op_.equals("IS NOT NULL"))
            buf.append(operand.toString() + " " + op_);
@@ -170,7 +168,7 @@ public class ZExpression implements ZExp {
         if(op_.toUpperCase().endsWith("BETWEEN")) {
           buf.append(getOperand(0).toString() + " " + op_ + " "
            + getOperand(1).toString()
-           + " AND " + getOperand(2).toString()); 
+           + " AND " + getOperand(2).toString());
           break;
         }
 
@@ -205,7 +203,7 @@ public class ZExpression implements ZExp {
   private boolean needPar(String op) {
     String tmp = op.toUpperCase();
     return ! (tmp.equals("ANY") || tmp.equals("ALL")
-     || tmp.equals("UNION") || ZUtils.isAggregate(tmp));
+     || tmp.equals("UNION") || org.gibello.zql.ZUtils.isAggregate(tmp));
   }
 
   private String formatFunction() {

@@ -17,9 +17,9 @@
 
 package org.gibello.zql.data;
 
-import java.util.Vector;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class ZTuple {
 
@@ -104,7 +104,7 @@ public class ZTuple {
     }
   }
 
-    
+
     /**
      * Set the value of the given attribute name
      * @param name the string representing the attribute name
@@ -115,7 +115,7 @@ public class ZTuple {
 	if(name != null)
 	    {
 	    boolean exist = searchTable_.containsKey(name);
-	    
+
 	    if(exist)
 		{
 		int i = ((Integer)searchTable_.get(name)).intValue();
@@ -191,7 +191,7 @@ public class ZTuple {
 
 	if(name != null)
 	    exist = searchTable_.containsKey(name);
-	
+
 	if (exist)
 	    {
 	    int index = ((Integer)searchTable_.get(name)).intValue();
@@ -213,7 +213,7 @@ public class ZTuple {
 	else
 	    return false;
     }
-    
+
     /**
      * Return the number of attributes in the tupple
      * @return int the number of attributes
@@ -233,7 +233,7 @@ public class ZTuple {
 	Object value;
 	String attS;
 	String valueS;
-	
+
 	StringBuffer resp = new StringBuffer();
 	resp.append("[");
 	if(attributes_.size() > 0)
@@ -243,7 +243,7 @@ public class ZTuple {
 		attS = "(null)";
 	    else
 		attS = att.toString();
-	    
+
 	    value = values_.elementAt(0);
 	    if(value==null)
 		valueS = "(null)";
@@ -251,7 +251,7 @@ public class ZTuple {
 		valueS = value.toString();
 	    resp.append(attS +" = "+ valueS);
 	    }
-	
+
 	for(int i=1; i < attributes_.size(); i++)
 	    {
 	    att = attributes_.elementAt(i);
@@ -259,7 +259,7 @@ public class ZTuple {
 		attS = "(null)";
 	    else
 		attS = att.toString();
-	    
+
 	    value = values_.elementAt(i);
 	    if(value==null)
 		valueS = "(null)";

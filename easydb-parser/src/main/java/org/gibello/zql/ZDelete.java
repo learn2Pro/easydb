@@ -1,4 +1,4 @@
-/*
+package org.gibello.zql;/*
  * This file is part of Zql.
  *
  * Zql is free software: you can redistribute it and/or modify
@@ -15,8 +15,6 @@
  * along with Zql.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.gibello.zql;
-
 /**
  * ZDelete: an SQL DELETE statement.<br>
  * SQL Syntax: DELETE [from] table [where Expression];
@@ -24,7 +22,7 @@ package org.gibello.zql;
 public class ZDelete implements ZStatement {
 
   String table_;
-  ZExp where_ = null;
+  org.gibello.zql.ZExp where_ = null;
 
   /**
    * Create a DELETE statement on a given table
@@ -38,7 +36,7 @@ public class ZDelete implements ZStatement {
    * Add a WHERE clause to the DELETE statement
    * @param w An SQL expression compatible with a WHERE clause
    */
-  public void addWhere(ZExp w) { where_ = w; }
+  public void addWhere(org.gibello.zql.ZExp w) { where_ = w; }
 
   /**
    * @return The table concerned by the DELETE statement.
@@ -49,7 +47,7 @@ public class ZDelete implements ZStatement {
    * @return The SQL Where clause of the DELETE statement (an SQL Expression
    * or Subquery, compatible with an SQL WHERE clause).
    */
-  public ZExp getWhere() { return where_; }
+  public org.gibello.zql.ZExp getWhere() { return where_; }
 
   public String toString() {
     StringBuffer buf = new StringBuffer("delete ");
