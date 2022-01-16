@@ -6,9 +6,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 
 /**
- * Class representing a type in SimpleDB.
- * Types are static objects defined by this class; hence, the Type
- * constructor is private.
+ * Class representing a type in SimpleDB. Types are static objects defined by this class; hence, the Type constructor is
+ * private.
  */
 public enum Type implements Serializable {
     INT_TYPE() {
@@ -21,15 +20,16 @@ public enum Type implements Serializable {
         public Field parse(DataInputStream dis) throws ParseException {
             try {
                 return new IntField(dis.readInt());
-            }  catch (IOException e) {
+            } catch (IOException e) {
                 throw new ParseException("couldn't parse", 0);
             }
         }
 
-    }, STRING_TYPE() {
+    },
+    STRING_TYPE() {
         @Override
         public int getLen() {
-            return STRING_LEN+4;
+            return STRING_LEN + 4;
         }
 
         @Override
@@ -48,18 +48,17 @@ public enum Type implements Serializable {
 
     public static final int STRING_LEN = 128;
 
-  /**
-   * @return the number of bytes required to store a field of this type.
-   */
+    /**
+     * @return the number of bytes required to store a field of this type.
+     */
     public abstract int getLen();
 
-  /**
-   * @return a Field object of the same type as this object that has contents
-   *   read from the specified DataInputStream.
-   * @param dis The input stream to read from
-   * @throws ParseException if the data read from the input stream is not
-   *   of the appropriate type.
-   */
+    /**
+     * @param dis The input stream to read from
+     * @return a Field object of the same type as this object that has contents read from the specified
+     *         DataInputStream.
+     * @throws ParseException if the data read from the input stream is not of the appropriate type.
+     */
     public abstract Field parse(DataInputStream dis) throws ParseException;
 
 }

@@ -21,6 +21,10 @@ public class Tuple implements Serializable {
      * the value of each field
      */
     private Field[] values;
+    /**
+     * the record no in page
+     */
+    private RecordId rid;
 
     /**
      * Create a new tuple with the specified schema (type).
@@ -46,7 +50,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return null;
+        return this.rid;
     }
 
     /**
@@ -56,6 +60,7 @@ public class Tuple implements Serializable {
      */
     public void setRecordId(RecordId rid) {
         // some code goes here
+        this.rid = rid;
     }
 
     /**
