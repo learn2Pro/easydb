@@ -380,5 +380,13 @@ public class HeapPage implements Page {
                 .iterator();
     }
 
+    public HeapPageId nextPage() {
+        if (this.pid != null) {
+            return this.pid.nextPage();
+        } else {
+            return null;
+        }
+    }
+
 }
 

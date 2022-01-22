@@ -86,4 +86,8 @@ public class HeapPageId implements PageId {
         return data;
     }
 
+    public HeapPageId nextPage() {
+        return new HeapPageId(this.getTableId(), this.getPageNumber() + 1);
+    }
+
 }
