@@ -91,8 +91,9 @@ public class HeapFile implements DbFile {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             Preconditions.checkArgument(pid instanceof HeapPageId, "the input page id must be heap page!");
             int start = pid.getPageNumber() * BufferPool.getPageSize();
-            byte pageBuf[] = new byte[BufferPool.getPageSize()];
-            int size = bis.read(pageBuf, start, BufferPool.getPageSize());
+            byte[] pageBuf = new byte[BufferPool.getPageSize()];
+            bis.skip(start);
+            int size = bis.read(pageBuf, 0, BufferPool.getPageSize());
             if (size == -1) {
                 throw new IllegalArgumentException("Read past end of table");
             }

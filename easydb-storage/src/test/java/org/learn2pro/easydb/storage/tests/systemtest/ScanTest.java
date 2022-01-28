@@ -9,7 +9,18 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.Page;
+import org.learn2pro.easydb.storage.PageId;
+import org.learn2pro.easydb.storage.SeqScan;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Utility;
 
 /**
  * Dumps the contents of a table.
@@ -84,7 +95,7 @@ public class ScanTest extends SimpleDbTestBase {
         }
 
         // Create the table
-        final int PAGES = 30;
+        final int PAGES = 2;
         ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
         File f = SystemTestUtil.createRandomHeapFileUnopened(1, 992*PAGES, 1000, null, tuples);
         TupleDesc td = Utility.getTupleDesc(1);
