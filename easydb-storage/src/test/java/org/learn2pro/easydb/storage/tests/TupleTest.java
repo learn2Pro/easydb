@@ -4,15 +4,23 @@ import static org.junit.Assert.assertEquals;
 
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.*;
-import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;;
+import org.learn2pro.easydb.storage.HeapPageId;
+import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.RecordId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
+
+;
 
 public class TupleTest extends SimpleDbTestBase {
 
     /**
      * Unit test for Tuple.getField() and Tuple.setField()
      */
-    @Test public void modifyFields() {
+    @Test
+    public void modifyFields() {
         TupleDesc td = Utility.getTupleDesc(2);
 
         Tuple tup = new Tuple(td);
@@ -32,7 +40,8 @@ public class TupleTest extends SimpleDbTestBase {
     /**
      * Unit test for Tuple.getTupleDesc()
      */
-    @Test public void getTupleDesc() {
+    @Test
+    public void getTupleDesc() {
         TupleDesc td = Utility.getTupleDesc(5);
         Tuple tup = new Tuple(td);
         assertEquals(td, tup.getTupleDesc());
@@ -44,18 +53,29 @@ public class TupleTest extends SimpleDbTestBase {
     @Test(expected = UnsupportedOperationException.class)
     public void modifyRecordId() {
         Tuple tup1 = new Tuple(Utility.getTupleDesc(1));
-        HeapPageId pid1 = new HeapPageId(0,0);
+        HeapPageId pid1 = new HeapPageId(0, 0);
         RecordId rid1 = new RecordId(pid1, 0);
         tup1.setRecordId(rid1);
 
-	try {
-	    assertEquals(rid1, tup1.getRecordId());
-	} catch (UnsupportedOperationException e) {
-		//rethrow the exception with an explanation
-    	throw new UnsupportedOperationException("modifyRecordId() test failed due to " +
-    			"RecordId.equals() not being implemented.  This is not required for Lab 1, " +
-    			"but should pass when you do implement the RecordId class.");
-	}
+        try {
+            assertEquals(rid1, tup1.getRecordId());
+        } catch (UnsupportedOperationException e) {
+            //rethrow the exception with an explanation
+            throw new UnsupportedOperationException("modifyRecordId() test failed due to " +
+                    "RecordId.equals() not being implemented.  This is not required for Lab 1, " +
+                    "but should pass when you do implement the RecordId class.");
+        }
+    }
+
+    @Test
+    public void tupleMergeTest() {
+        Tuple tup1 = new Tuple(Utility.getTupleDesc(1));
+        tup1.setField(0, new IntField(-1));
+        Tuple tup2 = new Tuple(Utility.getTupleDesc(1));
+        tup2.setField(0, new IntField(-2));
+        Tuple merge = Tuple.merge(tup1, tup2);
+        assertEquals(merge.getField(0), tup1.getField(0));
+        assertEquals(merge.getField(1), tup2.getField(0));
     }
 
     /**

@@ -37,6 +37,11 @@ public class Tuple implements Serializable {
         this.values = new Field[td.numFields()];
     }
 
+    public Tuple(TupleDesc schema, Field[] values) {
+        this.schema = schema;
+        this.values = values;
+    }
+
     /**
      * @return The TupleDesc representing the schema of this tuple.
      */
@@ -107,11 +112,23 @@ public class Tuple implements Serializable {
         return Arrays.stream(this.values).iterator();
     }
 
+    public Field[] getValues() {
+        return values;
+    }
+
     /**
      * reset the TupleDesc of this tuple (only affecting the TupleDesc)
      */
     public void resetTupleDesc(TupleDesc td) {
         // some code goes here
         this.schema = td;
+    }
+
+    public static Tuple merge(Tuple t0, Tuple t1) {
+        TupleDesc td = TupleDesc.merge(t0.getTupleDesc(), t1.getTupleDesc());
+        Field[] fields = new Field[td.numFields()];
+        System.arraycopy(t0.getValues(), 0, fields, 0, t0.getValues().length);
+        System.arraycopy(t1.getValues(), 0, fields, t0.getValues().length, t1.getValues().length);
+        return new Tuple(td, fields);
     }
 }

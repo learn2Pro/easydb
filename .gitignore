@@ -5,3 +5,4 @@ depen
 target/
 *.db
 log
+*.dat

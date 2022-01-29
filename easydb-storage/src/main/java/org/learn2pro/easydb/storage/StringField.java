@@ -34,6 +34,11 @@ public class StringField implements Field {
 			value = s;
 	}
 
+	public StringField(String value) {
+		this.value = value;
+		this.maxSize = this.value.length();
+	}
+
 	public String toString() {
 		return value;
 	}

@@ -39,6 +39,14 @@ public class TestUtil {
     }
 
     /**
+     * @return an IntField with value n
+     */
+    public static Field getField(String val) {
+        return new StringField(val, val.length());
+    }
+
+
+    /**
      * @param width the number of fields in each tuple
      * @param tupdata an array such that the ith element the jth tuple lives in slot j * width + i
      * @return a OpIterator over a list of tuples constructed over the data provided in the constructor. This iterator

@@ -14,19 +14,15 @@ public class Project extends Operator {
     private ArrayList<Integer> outFieldIds;
 
     /**
-     * Constructor accepts a child operator to read tuples to apply projection
-     * to and a list of fields in output tuple
+     * Constructor accepts a child operator to read tuples to apply projection to and a list of fields in output tuple
      *
-     * @param fieldList
-     *            The ids of the fields child's tupleDesc to project out
-     * @param typesList
-     *            the types of the fields in the final projection
-     * @param child
-     *            The child operator
+     * @param fieldList The ids of the fields child's tupleDesc to project out
+     * @param typesList the types of the fields in the final projection
+     * @param child The child operator
      */
     public Project(ArrayList<Integer> fieldList, ArrayList<Type> typesList,
             OpIterator child) {
-        this(fieldList,typesList.toArray(new Type[]{}),child);
+        this(fieldList, typesList.toArray(new Type[]{}), child);
     }
 
     public Project(ArrayList<Integer> fieldList, Type[] types,
@@ -62,8 +58,8 @@ public class Project extends Operator {
     }
 
     /**
-     * Operator.fetchNext implementation. Iterates over tuples from the child
-     * operator, projecting out the fields from the tuple
+     * Operator.fetchNext implementation. Iterates over tuples from the child operator, projecting out the fields from
+     * the tuple
      *
      * @return The next tuple, or null if there are no more tuples
      */
@@ -83,15 +79,14 @@ public class Project extends Operator {
 
     @Override
     public OpIterator[] getChildren() {
-        return new OpIterator[] { this.child };
+        return new OpIterator[]{this.child};
     }
 
     @Override
     public void setChildren(OpIterator[] children) {
-	if (this.child!=children[0])
-	{
-	    this.child = children[0];
-	}
+        if (this.child != children[0]) {
+            this.child = children[0];
+        }
     }
 
 }
