@@ -282,6 +282,16 @@ public class HeapPage implements Page {
     public void deleteTuple(Tuple t) throws DbException {
         // some code goes here
         // not necessary for lab1
+        if (t.getRecordId() == null || t.getRecordId().getTupleNumber() >= getNumTuples()) {
+            throw new DbException("not found the tuple to delete!");
+        }
+        int i = t.getRecordId().getTupleNumber();
+        Tuple item = tuples[i];
+        if (item == null) {
+            throw new DbException("the matching tuple is null in page!");
+        }
+        tuples[i] = null;
+        markSlotUsed(i, false);
     }
 
     /**
@@ -294,6 +304,25 @@ public class HeapPage implements Page {
     public void insertTuple(Tuple t) throws DbException {
         // some code goes here
         // not necessary for lab1
+        if (this.getNumEmptySlots() <= 0) {
+            throw new DbException("not found empty slot to insert,do insert new page!");
+        }
+        if (!t.getTupleDesc().equals(this.td)) {
+            throw new DbException("the tuple desc mismatch!");
+        }
+//        int tupleNo = t.getRecordId().getTupleNumber();
+        for (int i = 0; i < tuples.length; i++) {
+            if (!isSlotUsed(i)) {
+                updateRecord(t, i);
+                return;
+            }
+        }
+    }
+
+    private void updateRecord(Tuple t, int i) {
+        tuples[i] = t;
+        t.setRecordId(new RecordId(this.pid, i));
+        markSlotUsed(i, true);
     }
 
     /**
@@ -305,6 +334,8 @@ public class HeapPage implements Page {
         this.isPageDirty = dirty;
         if (!dirty) {
             this.dirtyTid = null;
+        } else {
+            this.dirtyTid = tid;
         }
     }
 
@@ -364,7 +395,7 @@ public class HeapPage implements Page {
         if (value) {
             flag |= (1 << shift);
         } else {
-            flag &= ~(0x80 << shift);
+            flag &= ~(1 << shift);
         }
         header[location] = flag;
     }

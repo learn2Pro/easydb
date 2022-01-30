@@ -93,6 +93,13 @@ public class PageLock {
     }
 
     private void writeLock(TransactionId tid, PageId pid) {
+        //use old lock
+        for (int i = 0; i < MAX_LOCK_NUM; i++) {
+            if (pageIds[i] != null && pageIds[i].equals(pid) && transactionIds[i].equals(tid)) {
+                return;
+            }
+        }
+        //create new lock
         for (int i = 0; i < MAX_LOCK_NUM; i++) {
             if (pageIds[i] == null) {
                 pageIds[i] = pid;
@@ -108,10 +115,11 @@ public class PageLock {
         lock.lock();
         try {
             for (int i = 0; i < MAX_LOCK_NUM; i++) {
-                if (pageIds[i].equals(pid) && transactionIds[i].equals(tid)) {
+                if (pageIds[i] != null && pageIds[i].equals(pid) && transactionIds[i].equals(tid)) {
                     pageIds[i] = null;
                     transactionIds[i] = null;
                     lockLevel[i] = -1;
+                    return;
                 }
             }
         } finally {
@@ -123,7 +131,7 @@ public class PageLock {
         lock.lock();
         try {
             for (int i = 0; i < MAX_LOCK_NUM; i++) {
-                if (transactionIds[i].equals(tid)) {
+                if (transactionIds[i] != null && transactionIds[i].equals(tid)) {
                     pageIds[i] = null;
                     transactionIds[i] = null;
                     lockLevel[i] = -1;

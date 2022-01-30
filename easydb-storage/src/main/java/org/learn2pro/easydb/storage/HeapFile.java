@@ -1,11 +1,15 @@
 package org.learn2pro.easydb.storage;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -120,7 +124,22 @@ public class HeapFile implements DbFile {
         // some code goes here
         // not necessary for lab1
         Preconditions.checkArgument(page instanceof HeapPage, "the input page id must be heap page!");
-        Files.write(file.toPath(), page.getPageData(), StandardOpenOption.APPEND);
+        //append
+        if (page.getId().getPageNumber() >= numPages()) {
+            Files.write(file.toPath(), page.getPageData(), StandardOpenOption.APPEND);
+            Database.getBufferPool().discardPage(page.getId());
+            incrPageSize(1);
+        }
+        //update
+        else {
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                FileChannel fc = fos.getChannel();
+                long pos = page.getId().getPageNumber() * BufferPool.getPageSize();
+                fc.write(ByteBuffer.wrap(page.getPageData()), pos);
+                Database.getBufferPool().discardPage(page.getId());
+            }
+        }
+
     }
 
     /**
@@ -135,16 +154,48 @@ public class HeapFile implements DbFile {
     public ArrayList<Page> insertTuple(TransactionId tid, Tuple t)
             throws DbException, IOException, TransactionAbortedException {
         // some code goes here
-        return null;
         // not necessary for lab1
+        Preconditions.checkArgument(t.getRecordId() != null && t.getRecordId().getPageId() != null,
+                "must specify the record and page id!");
+        int i = 0;
+        //update history page
+        for (; i < numPages(); i++) {
+            HeapPageId pageId = new HeapPageId(this.tableId, i);
+            try {
+                Page page = Database.getBufferPool().getPage(tid, pageId, Permissions.READ_WRITE);
+                page.insertTuple(t);
+                return Lists.newArrayList(page);
+            } catch (DbException e) {
+//                e.printStackTrace();
+            } finally {
+                Database.getBufferPool().releasePage(tid, pageId);
+            }
+        }
+        //create new page
+        byte[] data = HeapPage.createEmptyPageData();
+        HeapPage heapPage = new HeapPage(new HeapPageId(this.tableId, i), data);
+        heapPage.insertTuple(t);
+        writePage(heapPage);
+        return Lists.newArrayList(heapPage);
     }
 
     // see DbFile.java for javadocs
     public ArrayList<Page> deleteTuple(TransactionId tid, Tuple t) throws DbException,
             TransactionAbortedException {
         // some code goes here
-        return null;
         // not necessary for lab1
+        PageId pageId = t.getRecordId().getPageId();
+        try {
+            Page page = Database.getBufferPool().getPage(tid, pageId, Permissions.READ_WRITE);
+            page.deleteTuple(t);
+            return Lists.newArrayList(page);
+        } finally {
+            Database.getBufferPool().releasePage(tid, pageId);
+        }
+    }
+
+    public void incrPageSize(int incr) {
+        this.pageSize += 1;
     }
 
     // see DbFile.java for javadocs
@@ -223,7 +274,6 @@ public class HeapFile implements DbFile {
             current = null;
         }
     }
-
 
 
 }

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -114,6 +115,33 @@ public class Tuple implements Serializable {
 
     public Field[] getValues() {
         return values;
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (!(obj instanceof Tuple)) {
+//            return false;
+//        }
+//        Tuple other = (Tuple) obj;
+//        return other.getRecordId().equals(this.getRecordId());
+//    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Tuple tuple = (Tuple) o;
+        return Objects.equals(rid, tuple.rid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rid);
     }
 
     /**

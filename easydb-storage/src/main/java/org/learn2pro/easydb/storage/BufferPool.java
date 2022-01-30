@@ -2,6 +2,7 @@ package org.learn2pro.easydb.storage;
 
 import com.google.common.collect.Maps;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,6 +107,7 @@ public class BufferPool {
     public void releasePage(TransactionId tid, PageId pid) {
         // some code goes here
         // not necessary for lab1|lab2
+        pageLock.releaseLock(tid, pid);
     }
 
     /**
@@ -116,6 +118,7 @@ public class BufferPool {
     public void transactionComplete(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+        pageLock.releaseLockTrans(tid);
     }
 
     /**
@@ -124,7 +127,7 @@ public class BufferPool {
     public boolean holdsLock(TransactionId tid, PageId p) {
         // some code goes here
         // not necessary for lab1|lab2
-        return false;
+        return pageLock.readLockable(tid, p) || pageLock.writeLockable(tid, p);
     }
 
     /**
@@ -156,6 +159,12 @@ public class BufferPool {
             throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
+        List<Page> dirtyPage = dbFile.insertTuple(tid, t);
+        for (Page page : dirtyPage) {
+            page.markDirty(true, tid);
+            pageData.put(page.getId(), page);
+        }
     }
 
     /**
@@ -173,6 +182,9 @@ public class BufferPool {
             throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        int tableId = t.getRecordId().getPageId().getTableId();
+        DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
+        dbFile.deleteTuple(tid, t);
     }
 
     /**
@@ -194,6 +206,7 @@ public class BufferPool {
     public synchronized void discardPage(PageId pid) {
         // some code goes here
         // not necessary for lab1
+        pageData.remove(pid);
     }
 
     /**

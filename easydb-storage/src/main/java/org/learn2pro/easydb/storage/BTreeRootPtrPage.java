@@ -56,6 +56,26 @@ public class BTreeRootPtrPage implements Page {
 	}
 
 	/**
+	 * insert tuple to page
+	 *
+	 * @param t
+	 */
+	@Override
+	public void insertTuple(Tuple t) throws DbException {
+
+	}
+
+	/**
+	 * delete tuple from page
+	 *
+	 * @param t
+	 */
+	@Override
+	public void deleteTuple(Tuple t) throws DbException {
+
+	}
+
+	/**
 	 * @return the PageId associated with this page.
 	 */
 	public BTreePageId getId() {

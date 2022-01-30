@@ -166,6 +166,26 @@ public class BTreeInternalPage extends BTreePage {
 	}
 
 	/**
+	 * insert tuple to page
+	 *
+	 * @param t
+	 */
+	@Override
+	public void insertTuple(Tuple t) throws DbException {
+
+	}
+
+	/**
+	 * delete tuple from page
+	 *
+	 * @param t
+	 */
+	@Override
+	public void deleteTuple(Tuple t) throws DbException {
+
+	}
+
+	/**
 	 * Read keys from the source file.
 	 */
 	private Field readNextKey(DataInputStream dis, int slotId) throws NoSuchElementException {
