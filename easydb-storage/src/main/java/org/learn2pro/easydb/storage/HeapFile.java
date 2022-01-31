@@ -155,8 +155,6 @@ public class HeapFile implements DbFile {
             throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
-        Preconditions.checkArgument(t.getRecordId() != null && t.getRecordId().getPageId() != null,
-                "must specify the record and page id!");
         int i = 0;
         //update history page
         for (; i < numPages(); i++) {
