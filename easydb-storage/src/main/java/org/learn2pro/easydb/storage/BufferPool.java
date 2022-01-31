@@ -1,9 +1,7 @@
 package org.learn2pro.easydb.storage;
 
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from disk. Access methods call into it to retrieve
@@ -35,7 +33,7 @@ public class BufferPool {
     /**
      * page data hold by memory
      */
-    private Map<PageId, Page> pageData;
+    private LRUCache<PageId, Page> pageData;
     private PageLock pageLock;
 
     /**
@@ -46,7 +44,7 @@ public class BufferPool {
     public BufferPool(int numPages) {
         // some code goes here
         this.numPages = numPages;
-        this.pageData = Maps.newLinkedHashMap();
+        this.pageData = new LRUCache<>(numPages);
         this.pageLock = new PageLock();
     }
 
@@ -79,22 +77,26 @@ public class BufferPool {
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException {
         // some code goes here
-        pageLock.lockPage(tid, pid, perm);
-        Page page = pageData.get(pid);
-        if (page == null) {
-            DbFile dbFile = Database.getCatalog().getDatabaseFile(pid.getTableId());
-            page = dbFile.readPage(pid);
-            if (page != null) {
-                if (pageData.size() > getPageSize()) {
-                    evictPage();
+        try {
+            pageLock.lockPage(tid, pid, perm);
+            Page page = pageData.get(pid);
+            if (page == null) {
+                DbFile dbFile = Database.getCatalog().getDatabaseFile(pid.getTableId());
+                page = dbFile.readPage(pid);
+                if (page != null) {
+                    if (pageData.size() > this.numPages) {
+                        evictPage();
+                    }
+                    if (perm == Permissions.READ_WRITE) {
+                        page.markDirty(true, tid);
+                    }
+                    pageData.put(pid, page);
                 }
-                if (perm == Permissions.READ_WRITE) {
-                    page.markDirty(true, tid);
-                }
-                pageData.put(pid, page);
             }
+            return page;
+        } finally {
+            releasePage(tid, pid);
         }
-        return page;
     }
 
     /**
@@ -194,7 +196,7 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
-
+        flushPages(new TransactionId());
     }
 
     /**
@@ -217,6 +219,13 @@ public class BufferPool {
     private synchronized void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+        Page p = pageData.get(pid);
+        if (p != null && p.isDirty() != null) {
+            int tableId = p.getId().getTableId();
+            DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
+            dbFile.writePage(p);
+            p.markDirty(false, null);
+        }
     }
 
     /**
@@ -225,6 +234,14 @@ public class BufferPool {
     public synchronized void flushPages(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+        for (PageId pageId : pageData.keySet()) {
+            try {
+                pageLock.lockPage(tid, pageId, Permissions.READ_WRITE);
+                flushPage(pageId);
+            } catch (TransactionAbortedException e) {
+                throw new IOException(e);
+            }
+        }
     }
 
     /**
@@ -233,6 +250,15 @@ public class BufferPool {
     private synchronized void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
+        PageId pid = pageData.evictNode();
+        if (pid != null) {
+            try {
+                flushPage(pid);
+                discardPage(pid);
+            } catch (IOException e) {
+                throw new DbException(e);
+            }
+        }
     }
 
 }
