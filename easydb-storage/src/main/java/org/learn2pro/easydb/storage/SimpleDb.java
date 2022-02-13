@@ -78,7 +78,7 @@ public class SimpleDb {
 
             try {
                 //dynamically load Parser -- if it doesn't exist, print error message
-                Class<?> c = Class.forName("Parser");
+                Class<?> c = Class.forName("org.learn2pro.easydb.storage.Parser");
                 Class<?> s = String[].class;
 
                 java.lang.reflect.Method m = c.getMethod("main", s);
