@@ -13,6 +13,8 @@ import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.BTreeUtility.BTreeDeleter;
 import org.learn2pro.easydb.storage.BTreeUtility.BTreeInserter;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * System test for the BTree

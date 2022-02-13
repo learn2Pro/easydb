@@ -1,6 +1,7 @@
 package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
+import org.learn2pro.easydb.storage.common.Field;
 
 /**
  * Predicate compares tuples to a specified Field value.

@@ -14,6 +14,7 @@ import javax.swing.JTree;
 import javax.swing.WindowConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import org.learn2pro.easydb.storage.stats.TableStats;
 
 /**
  * The JoinOptimizer class is responsible for ordering a series of joins

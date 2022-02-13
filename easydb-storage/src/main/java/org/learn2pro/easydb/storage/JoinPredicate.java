@@ -2,6 +2,7 @@ package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.Field;
 
 /**
  * JoinPredicate compares fields of two tuples using a predicate. JoinPredicate is most likely used by the Join

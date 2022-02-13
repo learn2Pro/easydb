@@ -1,6 +1,7 @@
 package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
+import org.learn2pro.easydb.storage.common.Field;
 
 /**
  * IndexPredicate compares a field which has index on it against a given value

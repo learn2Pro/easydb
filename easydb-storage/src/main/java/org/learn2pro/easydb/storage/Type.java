@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
+import org.learn2pro.easydb.storage.common.StringField;
 
 /**
  * Class representing a type in SimpleDB. Types are static objects defined by this class; hence, the Type constructor is

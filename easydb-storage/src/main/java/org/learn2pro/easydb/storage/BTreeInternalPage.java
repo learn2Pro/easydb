@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Each instance of BTreeInternalPage stores data for one page of a BTreeFile and

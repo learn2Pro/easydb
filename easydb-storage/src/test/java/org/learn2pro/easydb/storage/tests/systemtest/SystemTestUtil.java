@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.UUID;
 import org.junit.Assert;
 import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.common.IntField;
 
 public class SystemTestUtil {
     public static final TupleDesc SINGLE_INT_DESCRIPTOR =

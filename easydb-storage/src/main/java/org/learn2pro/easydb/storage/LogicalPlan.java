@@ -7,6 +7,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Vector;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
+import org.learn2pro.easydb.storage.common.StringField;
+import org.learn2pro.easydb.storage.stats.TableStats;
 
 /**
  * LogicalPlan represents a logical query plan that has been through

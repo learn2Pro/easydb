@@ -16,7 +16,7 @@ import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.HeapFileEncoder;
 import org.learn2pro.easydb.storage.HeapPage;
 import org.learn2pro.easydb.storage.HeapPageId;
-import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.Tuple;
 import org.learn2pro.easydb.storage.Utility;
 import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;

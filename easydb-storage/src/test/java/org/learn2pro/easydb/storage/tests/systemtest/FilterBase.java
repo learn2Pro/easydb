@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.common.IntField;
 
 public abstract class FilterBase extends SimpleDbTestBase {
     private static final int COLUMNS = 3;

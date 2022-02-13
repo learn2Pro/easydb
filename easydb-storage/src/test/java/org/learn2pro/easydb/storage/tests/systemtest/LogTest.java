@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Test logging, aborts, and recovery.

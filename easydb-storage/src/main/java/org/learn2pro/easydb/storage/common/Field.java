@@ -1,8 +1,10 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.common;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.Type;
 
 /**
  * Interface for values of fields in tuples in
@@ -22,7 +24,7 @@ public interface Field extends Serializable{
      * @param value The value to compare this Field to
      * @return Whether or not the comparison yields true.
      */
-    public boolean compare(Predicate.Op op, Field value);
+    public boolean compare(Op op, Field value);
 
     /**
      * Returns the type of this field (see {@link Type#INT_TYPE} or {@link Type#STRING_TYPE}

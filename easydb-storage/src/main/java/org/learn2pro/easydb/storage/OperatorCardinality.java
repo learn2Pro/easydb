@@ -2,6 +2,7 @@ package org.learn2pro.easydb.storage;
 
 //import java.util.HashMap;
 import java.util.Map;
+import org.learn2pro.easydb.storage.stats.TableStats;
 
 /**
  * A utility class, which computes the estimated cardinalities of an operator

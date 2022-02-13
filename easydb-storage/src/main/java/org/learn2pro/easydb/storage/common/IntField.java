@@ -1,7 +1,9 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.common;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.Type;
 
 /**
  * Instance of Field that stores a single integer.
@@ -48,7 +50,7 @@ public class IntField implements Field {
      * @throws IllegalCastException if val is not an IntField
      * @see Field#compare
      */
-    public boolean compare(Predicate.Op op, Field val) {
+    public boolean compare(Op op, Field val) {
 
         IntField iVal = (IntField) val;
 

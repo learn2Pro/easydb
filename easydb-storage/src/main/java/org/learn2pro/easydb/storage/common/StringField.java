@@ -1,7 +1,9 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.common;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.Type;
 
 /**
  * Instance of Field that stores a single String of a fixed length.
@@ -80,7 +82,7 @@ public class StringField implements Field {
 	 *             if val is not a StringField
 	 * @see Field#compare
 	 */
-	public boolean compare(Predicate.Op op, Field val) {
+	public boolean compare(Op op, Field val) {
 
 		StringField iVal = (StringField) val;
 		int cmpVal = value.compareTo(iVal.value);

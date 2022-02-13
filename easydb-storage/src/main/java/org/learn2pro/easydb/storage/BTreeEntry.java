@@ -1,6 +1,7 @@
 package org.learn2pro.easydb.storage;
 
 import java.io.Serializable;
+import org.learn2pro.easydb.storage.common.Field;
 
 /**
  * Each instance of BTreeEntry stores one key and two child page ids. It is used

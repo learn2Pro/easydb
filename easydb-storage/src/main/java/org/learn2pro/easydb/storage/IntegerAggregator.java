@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.learn2pro.easydb.storage.TupleDesc.TDItem;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Knows how to compute some aggregate over a set of IntFields.

@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import org.learn2pro.easydb.storage.IntegerAggregator.GroupResult;
 import org.learn2pro.easydb.storage.IntegerAggregator.NoGroupResult;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * The common interface for any class that can compute an aggregate over a list of Tuples.

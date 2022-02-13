@@ -1,6 +1,8 @@
 package org.learn2pro.easydb.storage;
 
 import java.io.IOException;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * The delete operator. Delete reads tuples from its child operator and removes them from the table they belong to.

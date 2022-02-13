@@ -4,7 +4,7 @@ import java.io.File;
 import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.Filter;
 import org.learn2pro.easydb.storage.HeapFile;
-import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.Join;
 import org.learn2pro.easydb.storage.JoinPredicate;
 import org.learn2pro.easydb.storage.Predicate;

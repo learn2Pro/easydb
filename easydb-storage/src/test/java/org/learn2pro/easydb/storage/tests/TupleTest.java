@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.HeapPageId;
-import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.RecordId;
 import org.learn2pro.easydb.storage.Tuple;
 import org.learn2pro.easydb.storage.TupleDesc;

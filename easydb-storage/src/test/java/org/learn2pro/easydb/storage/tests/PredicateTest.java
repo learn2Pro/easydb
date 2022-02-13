@@ -8,7 +8,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.Predicate;
 import org.learn2pro.easydb.storage.Predicate.Op;
-import org.learn2pro.easydb.storage.StringField;
+import org.learn2pro.easydb.storage.common.StringField;
 import org.learn2pro.easydb.storage.Tuple;
 import org.learn2pro.easydb.storage.TupleDesc;
 import org.learn2pro.easydb.storage.TupleDesc.TDItem;

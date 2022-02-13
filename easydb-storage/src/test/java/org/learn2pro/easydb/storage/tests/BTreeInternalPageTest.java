@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.BTreeFileEncoder.EntryComparator;
 import org.learn2pro.easydb.storage.BTreeFileEncoder.ReverseEntryComparator;
-import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.tests.TestUtil.SkeletonFile;
 import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 import org.learn2pro.easydb.storage.tests.systemtest.SystemTestUtil;

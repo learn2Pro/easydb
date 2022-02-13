@@ -19,7 +19,7 @@ import org.learn2pro.easydb.storage.BufferPool;
 import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.DbException;
 import org.learn2pro.easydb.storage.IndexPredicate;
-import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.Page;
 import org.learn2pro.easydb.storage.PageId;
 import org.learn2pro.easydb.storage.Predicate.Op;

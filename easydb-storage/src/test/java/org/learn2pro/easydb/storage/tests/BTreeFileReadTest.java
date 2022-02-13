@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class BTreeFileReadTest extends SimpleDbTestBase {

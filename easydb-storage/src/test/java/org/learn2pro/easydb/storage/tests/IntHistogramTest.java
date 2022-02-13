@@ -2,7 +2,7 @@ package org.learn2pro.easydb.storage.tests;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.IntHistogram;
+import org.learn2pro.easydb.storage.stats.IntHistogram;
 import org.learn2pro.easydb.storage.Predicate.Op;
 
 public class IntHistogramTest {

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.BTreeUtility.BTreeWriter;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class BTreeDeadlockTest extends SimpleDbTestBase {

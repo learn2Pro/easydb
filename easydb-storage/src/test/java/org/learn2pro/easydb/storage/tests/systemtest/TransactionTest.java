@@ -12,6 +12,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Tests running concurrent transactions.

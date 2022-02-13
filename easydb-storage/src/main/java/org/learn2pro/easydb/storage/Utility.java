@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /** Helper methods used for testing and implementing random features. */
 public class Utility {

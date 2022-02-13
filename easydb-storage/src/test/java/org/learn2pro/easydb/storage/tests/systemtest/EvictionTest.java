@@ -7,7 +7,19 @@ import java.io.IOException;
 import java.util.Arrays;
 import junit.framework.Assert;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.Insert;
+import org.learn2pro.easydb.storage.SeqScan;
+import org.learn2pro.easydb.storage.Transaction;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.TupleIterator;
+import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Creates a heap file with 1024*500 tuples with two integer fields each.  Clears the buffer pool,

@@ -3,6 +3,8 @@ package org.learn2pro.easydb.storage;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import org.learn2pro.easydb.storage.TupleDesc.TDItem;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
 
 /**
  * Inserts tuples read from the child operator into the tableId specified in the constructor

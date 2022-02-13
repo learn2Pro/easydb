@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.learn2pro.easydb.storage.common.Field;
 
 /**
  * Tuple maintains information about the contents of a tuple. Tuples have a specified schema specified by a TupleDesc

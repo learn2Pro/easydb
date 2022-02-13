@@ -19,7 +19,7 @@ import org.learn2pro.easydb.storage.LogicalJoinNode;
 import org.learn2pro.easydb.storage.Parser;
 import org.learn2pro.easydb.storage.ParsingException;
 import org.learn2pro.easydb.storage.Predicate;
-import org.learn2pro.easydb.storage.TableStats;
+import org.learn2pro.easydb.storage.stats.TableStats;
 import org.learn2pro.easydb.storage.TransactionAbortedException;
 import org.learn2pro.easydb.storage.TransactionId;
 import org.learn2pro.easydb.storage.Utility;

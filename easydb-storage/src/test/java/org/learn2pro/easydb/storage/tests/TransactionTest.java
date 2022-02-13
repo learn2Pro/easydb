@@ -10,7 +10,7 @@ import org.learn2pro.easydb.storage.BufferPool;
 import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.HeapPage;
 import org.learn2pro.easydb.storage.HeapPageId;
-import org.learn2pro.easydb.storage.IntField;
+import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.PageId;
 import org.learn2pro.easydb.storage.Permissions;
 import org.learn2pro.easydb.storage.RecordId;

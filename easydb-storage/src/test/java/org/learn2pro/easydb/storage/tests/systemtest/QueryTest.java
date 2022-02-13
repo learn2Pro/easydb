@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.stats.TableStats;
 
 public class QueryTest {
 
