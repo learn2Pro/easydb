@@ -1,7 +1,9 @@
 package org.learn2pro.easydb.storage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from disk. Access methods call into it to retrieve
@@ -95,7 +97,7 @@ public class BufferPool {
             }
             return page;
         } finally {
-            releasePage(tid, pid);
+//            releasePage(tid, pid);
         }
     }
 
@@ -142,6 +144,7 @@ public class BufferPool {
             throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+        pageLock.releaseLockTrans(tid);
     }
 
     /**
@@ -196,7 +199,10 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
-        flushPages(new TransactionId());
+        List<Entry<PageId, Page>> entrySet = new ArrayList<>(pageData.entrySet());
+        for (Entry<PageId, Page> entry : entrySet) {
+            flushPage(entry.getKey());
+        }
     }
 
     /**
@@ -224,6 +230,7 @@ public class BufferPool {
             int tableId = p.getId().getTableId();
             DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
             dbFile.writePage(p);
+            releasePage(p.isDirty(), pid);
             p.markDirty(false, null);
         }
     }
@@ -234,12 +241,20 @@ public class BufferPool {
     public synchronized void flushPages(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
-        for (PageId pageId : pageData.keySet()) {
+        // clone for avoid concurrent modified exception
+        List<Entry<PageId, Page>> entrySet = new ArrayList<>(pageData.entrySet());
+        for (Entry<PageId, Page> entry : entrySet) {
+            PageId pageId = entry.getKey();
             try {
                 pageLock.lockPage(tid, pageId, Permissions.READ_WRITE);
-                flushPage(pageId);
+                TransactionId hold = entry.getValue().isDirty();
+                if (hold != null && hold.equals(tid)) {
+                    flushPage(pageId);
+                }
             } catch (TransactionAbortedException e) {
                 throw new IOException(e);
+            } finally {
+                pageLock.releaseLock(tid, pageId);
             }
         }
     }
