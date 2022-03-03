@@ -10,7 +10,7 @@ public class PageLock {
     /**
      * 100ms
      */
-    public static final int DEFAULT_ACQUIRE_LOCK_TIMEOUT = 3000;
+    public static final int DEFAULT_ACQUIRE_LOCK_TIMEOUT = 200;
     private TransactionId[] transactionIds;
     private PageId[] pageIds;
     private int[] lockLevel;

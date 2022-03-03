@@ -6,10 +6,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -99,7 +97,7 @@ public class HeapFile implements DbFile {
             bis.skip(start);
             int size = bis.read(pageBuf, 0, BufferPool.getPageSize());
             if (size == -1) {
-                throw new IllegalArgumentException("Read past end of table");
+                throw new DbFileEndException("Read past end of table");
             }
             if (size < BufferPool.getPageSize()) {
                 throw new IllegalArgumentException("Unable to read "
@@ -132,10 +130,9 @@ public class HeapFile implements DbFile {
         }
         //update
         else {
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                FileChannel fc = fos.getChannel();
-                long pos = page.getId().getPageNumber() * BufferPool.getPageSize();
-                fc.write(ByteBuffer.wrap(page.getPageData()), pos);
+            try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
+                raf.seek(page.getId().getPageNumber() * BufferPool.getPageSize());
+                raf.write(page.getPageData());
                 Database.getBufferPool().discardPage(page.getId());
             }
         }
@@ -159,11 +156,14 @@ public class HeapFile implements DbFile {
         //update history page
         for (; i < numPages(); i++) {
             HeapPageId pageId = new HeapPageId(this.tableId, i);
+            Page page = Database.getBufferPool().getPage(tid, pageId, Permissions.READ_WRITE);
             try {
-                Page page = Database.getBufferPool().getPage(tid, pageId, Permissions.READ_WRITE);
                 page.insertTuple(t);
+                //succeed then return
                 return Lists.newArrayList(page);
             } catch (DbException e) {
+                //do not change page
+                page.markDirty(false, null);
 //                e.printStackTrace();
             } finally {
                 Database.getBufferPool().releasePage(tid, pageId);

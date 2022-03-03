@@ -1,6 +1,8 @@
 package org.learn2pro.easydb.storage;
 
 import java.util.LinkedHashMap;
+//TODO extend concurrent hash map can not pass {@link LockingTest}
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LRUCache<K, T> extends LinkedHashMap<K, T> {
 

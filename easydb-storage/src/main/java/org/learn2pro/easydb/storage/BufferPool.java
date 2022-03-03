@@ -144,7 +144,19 @@ public class BufferPool {
             throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
-        pageLock.releaseLockTrans(tid);
+        try {
+            //write dirty page to disk
+            List<Entry<PageId, Page>> entries = new ArrayList<>(pageData.entrySet());
+            for (Entry<PageId, Page> item : entries) {
+                if (commit) {
+                    flushPage(item.getKey());
+                } else {
+                    discardPage(item.getKey());
+                }
+            }
+        } finally {
+            pageLock.releaseLockTrans(tid);
+        }
     }
 
     /**
@@ -265,15 +277,27 @@ public class BufferPool {
     private synchronized void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
-        PageId pid = pageData.evictNode();
-        if (pid != null) {
-            try {
-                flushPage(pid);
-                discardPage(pid);
-            } catch (IOException e) {
-                throw new DbException(e);
+//        PageId pid = pageData.evictNode();
+//        Page p = pageData.get(pid);
+//        if (pid != null) {
+//            try {
+//                flushPage(pid);
+//                discardPage(pid);
+//            } catch (IOException e) {
+//                throw new DbException(e);
+//            }
+//        }
+        List<Entry<PageId, Page>> entrySet = new ArrayList<>(pageData.entrySet());
+        for (Entry<PageId, Page> entry : entrySet) {
+            if (entry.getValue().isDirty() == null) {
+//                int tableId = entry.getKey().getTableId();
+//                DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
+//                    dbFile.writePage(entry.getValue());
+                discardPage(entry.getKey());
+                return;
             }
         }
+        throw new DbException("Can not found clean page to evict!");
     }
 
 }
