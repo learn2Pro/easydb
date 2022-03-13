@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from disk. Access methods call into it to retrieve
@@ -35,7 +36,7 @@ public class BufferPool {
     /**
      * page data hold by memory
      */
-    private LRUCache<PageId, Page> pageData;
+    private final LRUCache<PageId, Page> pageData;
     private PageLock pageLock;
 
     /**
@@ -79,26 +80,22 @@ public class BufferPool {
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException {
         // some code goes here
-        try {
-            pageLock.lockPage(tid, pid, perm);
-            Page page = pageData.get(pid);
-            if (page == null) {
-                DbFile dbFile = Database.getCatalog().getDatabaseFile(pid.getTableId());
-                page = dbFile.readPage(pid);
-                if (page != null) {
-                    if (pageData.size() > this.numPages) {
-                        evictPage();
-                    }
-                    if (perm == Permissions.READ_WRITE) {
-                        page.markDirty(true, tid);
-                    }
-                    pageData.put(pid, page);
+        pageLock.lockPage(tid, pid, perm);
+        Page page = pageData.get(pid);
+        if (page == null) {
+            DbFile dbFile = Database.getCatalog().getDatabaseFile(pid.getTableId());
+            page = dbFile.readPage(pid);
+            if (page != null) {
+                if (pageData.size() >= this.numPages) {
+                    evictPage();
                 }
+                if (perm == Permissions.READ_WRITE) {
+                    page.markDirty(true, tid);
+                }
+                pageData.put(pid, page);
             }
-            return page;
-        } finally {
-//            releasePage(tid, pid);
         }
+        return page;
     }
 
     /**
@@ -122,7 +119,7 @@ public class BufferPool {
     public void transactionComplete(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
-        pageLock.releaseLockTrans(tid);
+        transactionComplete(tid, true);
     }
 
     /**
@@ -144,19 +141,18 @@ public class BufferPool {
             throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
-        try {
-            //write dirty page to disk
-            List<Entry<PageId, Page>> entries = new ArrayList<>(pageData.entrySet());
-            for (Entry<PageId, Page> item : entries) {
-                if (commit) {
-                    flushPage(item.getKey());
-                } else {
-                    discardPage(item.getKey());
-                }
-            }
-        } finally {
-            pageLock.releaseLockTrans(tid);
+        Set<PageId> heldByTid = pageLock.getPagesHeldByTid(tid);
+        if (heldByTid.isEmpty()) {
+            return;
         }
+        for (PageId pageId : heldByTid) {
+            if (commit) {
+                flushPage(pageId);
+            } else {
+                discardPage(pageId);
+            }
+        }
+        pageLock.releaseLockTrans(tid);
     }
 
     /**
@@ -201,7 +197,11 @@ public class BufferPool {
         // not necessary for lab1
         int tableId = t.getRecordId().getPageId().getTableId();
         DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
-        dbFile.deleteTuple(tid, t);
+        List<Page> dirtyPage = dbFile.deleteTuple(tid, t);
+        for (Page page : dirtyPage) {
+            page.markDirty(true, tid);
+            pageData.put(page.getId(), page);
+        }
     }
 
     /**
@@ -242,7 +242,7 @@ public class BufferPool {
             int tableId = p.getId().getTableId();
             DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
             dbFile.writePage(p);
-            releasePage(p.isDirty(), pid);
+            p.setBeforeImage();
             p.markDirty(false, null);
         }
     }
@@ -254,20 +254,8 @@ public class BufferPool {
         // some code goes here
         // not necessary for lab1|lab2
         // clone for avoid concurrent modified exception
-        List<Entry<PageId, Page>> entrySet = new ArrayList<>(pageData.entrySet());
-        for (Entry<PageId, Page> entry : entrySet) {
-            PageId pageId = entry.getKey();
-            try {
-                pageLock.lockPage(tid, pageId, Permissions.READ_WRITE);
-                TransactionId hold = entry.getValue().isDirty();
-                if (hold != null && hold.equals(tid)) {
-                    flushPage(pageId);
-                }
-            } catch (TransactionAbortedException e) {
-                throw new IOException(e);
-            } finally {
-                pageLock.releaseLock(tid, pageId);
-            }
+        for (PageId pid : pageLock.getPagesHeldByTid(tid)) {
+            flushPage(pid);
         }
     }
 
@@ -277,22 +265,14 @@ public class BufferPool {
     private synchronized void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
-//        PageId pid = pageData.evictNode();
-//        Page p = pageData.get(pid);
-//        if (pid != null) {
-//            try {
-//                flushPage(pid);
-//                discardPage(pid);
-//            } catch (IOException e) {
-//                throw new DbException(e);
-//            }
-//        }
         List<Entry<PageId, Page>> entrySet = new ArrayList<>(pageData.entrySet());
         for (Entry<PageId, Page> entry : entrySet) {
             if (entry.getValue().isDirty() == null) {
-//                int tableId = entry.getKey().getTableId();
-//                DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
-//                    dbFile.writePage(entry.getValue());
+                try {
+                    flushPage(entry.getKey());
+                } catch (IOException e) {
+                    throw new DbException(e);
+                }
                 discardPage(entry.getKey());
                 return;
             }

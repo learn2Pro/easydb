@@ -125,7 +125,6 @@ public class HeapFile implements DbFile {
         //append
         if (page.getId().getPageNumber() >= numPages()) {
             Files.write(file.toPath(), page.getPageData(), StandardOpenOption.APPEND);
-            Database.getBufferPool().discardPage(page.getId());
             incrPageSize(1);
         }
         //update
@@ -133,7 +132,6 @@ public class HeapFile implements DbFile {
             try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
                 raf.seek(page.getId().getPageNumber() * BufferPool.getPageSize());
                 raf.write(page.getPageData());
-                Database.getBufferPool().discardPage(page.getId());
             }
         }
 
@@ -164,16 +162,15 @@ public class HeapFile implements DbFile {
             } catch (DbException e) {
                 //do not change page
                 page.markDirty(false, null);
-//                e.printStackTrace();
             } finally {
-                Database.getBufferPool().releasePage(tid, pageId);
+//                Database.getBufferPool().releasePage(tid, pageId);
             }
         }
         //create new page
         byte[] data = HeapPage.createEmptyPageData();
         HeapPage heapPage = new HeapPage(new HeapPageId(this.tableId, i), data);
         heapPage.insertTuple(t);
-        writePage(heapPage);
+//        writePage(heapPage);
         return Lists.newArrayList(heapPage);
     }
 
@@ -188,7 +185,7 @@ public class HeapFile implements DbFile {
             page.deleteTuple(t);
             return Lists.newArrayList(page);
         } finally {
-            Database.getBufferPool().releasePage(tid, pageId);
+//            Database.getBufferPool().releasePage(tid, pageId);
         }
     }
 

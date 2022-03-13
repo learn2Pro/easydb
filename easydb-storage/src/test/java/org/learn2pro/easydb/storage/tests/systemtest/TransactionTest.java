@@ -11,16 +11,30 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.DbFile;
+import org.learn2pro.easydb.storage.DbFileIterator;
+import org.learn2pro.easydb.storage.Delete;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.Insert;
+import org.learn2pro.easydb.storage.Query;
+import org.learn2pro.easydb.storage.SeqScan;
+import org.learn2pro.easydb.storage.Transaction;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleIterator;
 import org.learn2pro.easydb.storage.common.IntField;
 
 /**
- * Tests running concurrent transactions.
- * You do not need to pass this test until lab3.
+ * Tests running concurrent transactions. You do not need to pass this test until lab3.
  */
 public class TransactionTest extends SimpleDbTestBase {
+
     // Wait up to 10 minutes for the test to complete
     private static final int TIMEOUT_MILLIS = 10 * 60 * 1000;
+
     private void validateTransactions(int threads)
             throws DbException, TransactionAbortedException, IOException {
         // Create a table with a single integer value = 0
@@ -30,7 +44,7 @@ public class TransactionTest extends SimpleDbTestBase {
 
         ModifiableCyclicBarrier latch = new ModifiableCyclicBarrier(threads);
         XactionTester[] list = new XactionTester[threads];
-        for(int i = 0; i < list.length; i++) {
+        for (int i = 0; i < list.length; i++) {
             list[i] = new XactionTester(table.getId(), latch);
             list[i].start();
         }
@@ -70,6 +84,7 @@ public class TransactionTest extends SimpleDbTestBase {
     }
 
     private static class XactionTester extends Thread {
+
         private final int tableId;
         private final ModifiableCyclicBarrier latch;
         public Exception exception = null;
@@ -83,6 +98,8 @@ public class TransactionTest extends SimpleDbTestBase {
         public void run() {
             try {
                 // Try to increment the value until we manage to successfully commit
+                AtomicInteger pre = new AtomicInteger(-1);
+                AtomicInteger i = new AtomicInteger(-1);
                 while (true) {
                     // Wait for all threads to be ready
                     latch.await();
@@ -97,12 +114,12 @@ public class TransactionTest extends SimpleDbTestBase {
                         q1.start();
                         Tuple tup = q1.next();
                         IntField intf = (IntField) tup.getField(0);
-                        int i = intf.getValue();
+                        i.set(intf.getValue());
 
                         // create a Tuple so that Insert can insert this new value
                         // into the table.
                         Tuple t = new Tuple(SystemTestUtil.SINGLE_INT_DESCRIPTOR);
-                        t.setField(0, new IntField(i+1));
+                        t.setField(0, new IntField(i.get() + 1));
 
                         // sleep to get some interesting thread interleavings
                         Thread.sleep(1);
@@ -134,7 +151,12 @@ public class TransactionTest extends SimpleDbTestBase {
                         tr.commit();
                         break;
                     } catch (TransactionAbortedException te) {
-                        //System.out.println("thread " + tr.getId() + " killed");
+                        if (pre.get() != i.get()) {
+                            String msg = String.format("thread:%s,transaction:%s killed,value i:%s,msg:%s",
+                                    Thread.currentThread().getName(), tr.getId().getId(), i.get(), te.getMessage());
+                            System.out.println(msg);
+                            pre.set(i.get());
+                        }
                         // give someone else a chance: abort the transaction
                         tr.transactionComplete(true);
                         latch.stillParticipating();
@@ -158,6 +180,7 @@ public class TransactionTest extends SimpleDbTestBase {
     }
 
     private static class ModifiableCyclicBarrier {
+
         private CountDownLatch awaitLatch;
         private CyclicBarrier participationLatch;
         private AtomicInteger nextParticipants;
@@ -187,6 +210,7 @@ public class TransactionTest extends SimpleDbTestBase {
         }
 
         private static class UpdateLatch implements Runnable {
+
             ModifiableCyclicBarrier latch;
             AtomicInteger nextParticipants;
 
@@ -205,30 +229,35 @@ public class TransactionTest extends SimpleDbTestBase {
         }
     }
 
-    @Test public void testSingleThread()
+    @Test
+    public void testSingleThread()
             throws IOException, DbException, TransactionAbortedException {
         validateTransactions(1);
     }
 
-    @Test public void testTwoThreads()
+    @Test
+    public void testTwoThreads()
             throws IOException, DbException, TransactionAbortedException {
         validateTransactions(2);
     }
 
-    @Test public void testFiveThreads()
+    @Test
+    public void testFiveThreads()
             throws IOException, DbException, TransactionAbortedException {
         validateTransactions(5);
     }
 
-    @Test public void testTenThreads()
-    throws IOException, DbException, TransactionAbortedException {
+    @Test
+    public void testTenThreads()
+            throws IOException, DbException, TransactionAbortedException {
         validateTransactions(10);
     }
 
-    @Test public void testAllDirtyFails()
+    @Test
+    public void testAllDirtyFails()
             throws IOException, DbException, TransactionAbortedException {
         // Allocate a file with ~10 pages of data
-        HeapFile f = SystemTestUtil.createRandomHeapFile(2, 512*10, null, null);
+        HeapFile f = SystemTestUtil.createRandomHeapFile(2, 512 * 10, null, null);
         Database.resetBufferPool(1);
 
         // BEGIN TRANSACTION
@@ -242,11 +271,14 @@ public class TransactionTest extends SimpleDbTestBase {
         try {
             EvictionTest.findMagicTuple(f, t);
             fail("Expected scan to run out of available buffer pages");
-        } catch (DbException e) {}
+        } catch (DbException e) {
+        }
         t.commit();
     }
 
-    /** Make test compatible with older version of ant. */
+    /**
+     * Make test compatible with older version of ant.
+     */
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TransactionTest.class);
     }
