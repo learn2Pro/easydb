@@ -1,4 +1,4 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.btree;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -10,7 +10,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.DbFileIterator;
+import org.learn2pro.easydb.storage.HeapFile;
+import org.learn2pro.easydb.storage.HeapFileEncoder;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.Transaction;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Type;
+import org.learn2pro.easydb.storage.Utility;
 
 /**
  * BTreeFileEncoder reads a comma delimited text file and converts it to
@@ -481,6 +494,7 @@ public class BTreeFileEncoder {
 			if(size == nentries * 2 + 1) {
 				// write out a page of entries
 				ArrayList<BTreeEntry> pageEntries = new ArrayList<BTreeEntry>();
+				// split the first
 				pageEntries.addAll(entries.get(level).subList(0, nentries));
 				byte[] internalPageBytes = convertToInternalPage(pageEntries, npagebytes, keyType, childPageCategory);
 				BTreePageId internalPid = new BTreePageId(tableid, bf.numPages() + 1, BTreePageId.INTERNAL);

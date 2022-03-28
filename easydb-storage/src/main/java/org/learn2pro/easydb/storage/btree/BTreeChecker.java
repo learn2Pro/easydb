@@ -1,8 +1,14 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.btree;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.Page;
+import org.learn2pro.easydb.storage.PageId;
+import org.learn2pro.easydb.storage.Permissions;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
 import org.learn2pro.easydb.storage.common.Field;
 
 /**

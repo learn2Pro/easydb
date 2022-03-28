@@ -1,6 +1,16 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.btree;
 
 import java.util.NoSuchElementException;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.DbFileIterator;
+import org.learn2pro.easydb.storage.IndexPredicate;
+import org.learn2pro.easydb.storage.OpIterator;
+import org.learn2pro.easydb.storage.TransactionAbortedException;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Type;
 
 /**
  * BTreeScan is an operator which reads tuples in sorted order

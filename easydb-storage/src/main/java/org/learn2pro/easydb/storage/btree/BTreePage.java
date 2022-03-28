@@ -1,6 +1,14 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.btree;
 
 import java.io.IOException;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Catalog;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbException;
+import org.learn2pro.easydb.storage.Page;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.TupleDesc;
+import org.learn2pro.easydb.storage.Type;
 
 /**
  * Each instance of BTreeInternalPage stores data for one page of a BTreeFile and

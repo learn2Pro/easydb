@@ -1,4 +1,7 @@
-package org.learn2pro.easydb.storage;
+package org.learn2pro.easydb.storage.btree;
+
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.PageId;
 
 /** Unique identifier for BTreeInternalPage, BTreeLeafPage, BTreeHeaderPage
  *  and BTreeRootPtrPage objects.
