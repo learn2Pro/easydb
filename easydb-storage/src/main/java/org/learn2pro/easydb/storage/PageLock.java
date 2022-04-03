@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class PageLock {
 
-    public static final int MAX_LOCK_NUM = 512;
+    public static final int MAX_LOCK_NUM = 1024;
     /**
      * 100ms
      */

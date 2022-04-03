@@ -26,6 +26,7 @@ import org.learn2pro.easydb.storage.Page;
 import org.learn2pro.easydb.storage.PageId;
 import org.learn2pro.easydb.storage.Permissions;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.RecordId;
 import org.learn2pro.easydb.storage.TransactionAbortedException;
 import org.learn2pro.easydb.storage.TransactionId;
 import org.learn2pro.easydb.storage.Tuple;
@@ -438,27 +439,37 @@ public class BTreeFile implements DbFile {
 
     }
 
+    /**
+     * binary search
+     */
     private int findInsertIndexOfLeafPage(Field field, List<Tuple> all) {
-        for (int i = 0; i < all.size() - 1; i++) {
-            Tuple current = all.get(i);
-            Tuple next = all.get(i + 1);
-            if (current.getField(keyField).compare(Op.LESS_THAN, field) && next.getField(keyField)
-                    .compare(Op.GREATER_THAN_OR_EQ, field)) {
-                return i + 1;
+        int s = 0, e = all.size() - 1;
+        while (s <= e) {
+            int mid = (s + e) / 2;
+            if (all.get(mid).getField(keyField).compare(Op.LESS_THAN, field)) {
+                return mid + 1;
+            } else if (all.get(mid).getField(keyField).compare(Op.GREATER_THAN_OR_EQ, field)) {
+                e = mid - 1;
+            } else {
+                s = mid;
             }
         }
-        return all.size();
+        return e + 1;
     }
 
     private int findInsertIndexOfInternalPage(Field field, List<BTreeEntry> all) {
-        for (int i = 0; i < all.size() - 1; i++) {
-            BTreeEntry current = all.get(i);
-            BTreeEntry next = all.get(i + 1);
-            if (current.getKey().compare(Op.LESS_THAN, field) && next.getKey().compare(Op.GREATER_THAN_OR_EQ, field)) {
-                return i + 1;
+        int s = 0, e = all.size() - 1;
+        while (s <= e) {
+            int mid = (s + e) / 2;
+            if (all.get(mid).getKey().compare(Op.LESS_THAN, field)) {
+                return mid + 1;
+            } else if (all.get(mid).getKey().compare(Op.GREATER_THAN_OR_EQ, field)) {
+                e = mid - 1;
+            } else {
+                s = mid;
             }
         }
-        return all.size();
+        return e + 1;
     }
 
     private BTreeInternalPage pushUpEntry(TransactionId tid, HashMap<PageId, Page> dirtypages,
@@ -879,26 +890,28 @@ public class BTreeFile implements DbFile {
         int more = leftSibling.getNumEntries();
         int half = (less + more) / 2;
         Iterator<BTreeEntry> iterator = leftSibling.reverseIterator();
+        BTreePageId leftMostInRight = page.iterator().next().getLeftChild();
         while (less < half) {
             BTreeEntry current = iterator.next();
             //cache mem pointer
             BTreePageId parentLeft = parentEntry.getLeftChild();
             BTreePageId parentRight = parentEntry.getRightChild();
-            BTreePageId currentLeft = current.getRightChild();
+            RecordId rid = parentEntry.getRecordId();
             BTreePageId currentRight = current.getRightChild();
             leftSibling.deleteKeyAndLeftChild(current);
-            parent.deleteKeyAndLeftChild(parentEntry);
             //update pointer
-            parentEntry.setLeftChild(currentLeft);
-            parentEntry.setRightChild(currentRight);
+            parentEntry.setLeftChild(currentRight);
+            parentEntry.setRightChild(leftMostInRight);
             current.setLeftChild(parentLeft);
             current.setRightChild(parentRight);
+            current.setRecordId(rid);
             //store to page
+            parent.updateEntry(current);
             page.insertEntry(parentEntry);
-            parent.insertEntry(current);
             //update the child of less node which get node from parent
             updateParentPointers(tid, dirtypages, page);
             parentEntry = current;
+            leftMostInRight = currentRight;
             less++;
         }
     }
@@ -929,29 +942,31 @@ public class BTreeFile implements DbFile {
         // the corresponding parent entry. Be sure to update the parent
         // pointers of all children in the entries that were moved.
         int less = page.getNumEntries();
-        int more = rightSibling.getNumEmptySlots();
+        int more = rightSibling.getNumEntries();
         int half = (less + more) / 2;
         Iterator<BTreeEntry> iterator = rightSibling.iterator();
+        BTreePageId rightMostInLeft = page.reverseIterator().next().getRightChild();
         while (less < half) {
             BTreeEntry current = iterator.next();
             //cache mem pointer
             BTreePageId parentLeft = parentEntry.getLeftChild();
             BTreePageId parentRight = parentEntry.getRightChild();
-            BTreePageId currentLeft = current.getRightChild();
-            BTreePageId currentRight = current.getRightChild();
+            RecordId rid = parentEntry.getRecordId();
+            BTreePageId currentLeft = current.getLeftChild();
             rightSibling.deleteKeyAndRightChild(current);
-            parent.deleteKeyAndLeftChild(parentEntry);
             //update pointer
-            parentEntry.setLeftChild(currentLeft);
-            parentEntry.setRightChild(currentRight);
+            parentEntry.setLeftChild(rightMostInLeft);
+            parentEntry.setRightChild(currentLeft);
             current.setLeftChild(parentLeft);
             current.setRightChild(parentRight);
+            current.setRecordId(rid);
             //store to page
+            parent.updateEntry(current);
             page.insertEntry(parentEntry);
-            parent.insertEntry(current);
-            parentEntry = current;
             //update the child of less node which get node from parent
             updateParentPointers(tid, dirtypages, page);
+            parentEntry = current;
+            rightMostInLeft = currentLeft;
             less++;
         }
     }
