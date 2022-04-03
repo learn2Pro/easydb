@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
@@ -22,7 +23,7 @@ public abstract class FilterBase extends SimpleDbTestBase {
     protected void validateAfter(HeapFile table)
             throws DbException, TransactionAbortedException, IOException {}
 
-    protected ArrayList<ArrayList<Integer>> createdTuples;
+    protected List<List<Integer>> createdTuples;
 
     private int runTransactionForPredicate(HeapFile table, Predicate predicate)
             throws IOException, DbException, TransactionAbortedException {
@@ -53,7 +54,7 @@ public abstract class FilterBase extends SimpleDbTestBase {
             throws IOException, DbException, TransactionAbortedException {
         Map<Integer, Integer> columnSpecification = new HashMap<Integer, Integer>();
         columnSpecification.put(column, columnValue);
-        createdTuples = new ArrayList<ArrayList<Integer>>();
+        createdTuples = new ArrayList<>();
         return SystemTestUtil.createRandomHeapFile(
                 COLUMNS, ROWS, columnSpecification, createdTuples);
     }

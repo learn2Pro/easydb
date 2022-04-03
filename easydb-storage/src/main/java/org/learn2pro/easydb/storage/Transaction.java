@@ -3,11 +3,11 @@ package org.learn2pro.easydb.storage;
 import java.io.IOException;
 
 /**
- * Transaction encapsulates information about the state of
- * a transaction and manages transaction commit / abort.
+ * Transaction encapsulates information about the state of a transaction and manages transaction commit / abort.
  */
 
 public class Transaction {
+
     private final TransactionId tid;
     volatile boolean started = false;
 
@@ -15,7 +15,9 @@ public class Transaction {
         tid = new TransactionId();
     }
 
-    /** Start the transaction running */
+    /**
+     * Start the transaction running
+     */
     public void start() {
         started = true;
         try {
@@ -29,17 +31,23 @@ public class Transaction {
         return tid;
     }
 
-    /** Finish the transaction */
+    /**
+     * Finish the transaction
+     */
     public void commit() throws IOException {
         transactionComplete(false);
     }
 
-    /** Finish the transaction */
+    /**
+     * Finish the transaction
+     */
     public void abort() throws IOException {
         transactionComplete(true);
     }
 
-    /** Handle the details of transaction commit / abort */
+    /**
+     * Handle the details of transaction commit / abort
+     */
     public void transactionComplete(boolean abort) throws IOException {
 
         if (started) {
@@ -52,11 +60,7 @@ public class Transaction {
                 Database.getLogFile().logCommit(tid);
             }
 
-            try {
-                Database.getBufferPool().transactionComplete(tid, !abort); // release locks
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Database.getBufferPool().transactionComplete(tid, !abort); // release locks
 
             //setting this here means we could possibly write multiple abort records -- OK?
             started = false;

@@ -3,6 +3,7 @@ package org.learn2pro.easydb.storage.tests.systemtest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.Aggregate;
@@ -18,7 +19,7 @@ import org.learn2pro.easydb.storage.TransactionId;
 public class AggregateTest extends SimpleDbTestBase {
 
     public void validateAggregate(DbFile table, Aggregator.Op operation, int aggregateColumn, int groupColumn,
-            ArrayList<ArrayList<Integer>> expectedResult)
+            List<List<Integer>> expectedResult)
             throws DbException, TransactionAbortedException, IOException {
         TransactionId tid = new TransactionId();
         SeqScan ss = new SeqScan(tid, table.getId(), "");
@@ -67,11 +68,11 @@ public class AggregateTest extends SimpleDbTestBase {
         return value;
     }
 
-    private ArrayList<ArrayList<Integer>> aggregate(ArrayList<ArrayList<Integer>> tuples, Aggregator.Op operation,
+    private List<List<Integer>> aggregate(List<List<Integer>> tuples, Aggregator.Op operation,
             int aggregateColumn, int groupColumn) {
         // Group the values
         HashMap<Integer, ArrayList<Integer>> values = new HashMap<Integer, ArrayList<Integer>>();
-        for (ArrayList<Integer> t : tuples) {
+        for (List<Integer> t : tuples) {
             Integer key = null;
             if (groupColumn != Aggregator.NO_GROUPING) {
                 key = t.get(groupColumn);
@@ -84,7 +85,7 @@ public class AggregateTest extends SimpleDbTestBase {
             values.get(key).add(value);
         }
 
-        ArrayList<ArrayList<Integer>> results = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
         for (Map.Entry<Integer, ArrayList<Integer>> e : values.entrySet()) {
             ArrayList<Integer> result = new ArrayList<Integer>();
             if (groupColumn != Aggregator.NO_GROUPING) {
@@ -103,12 +104,12 @@ public class AggregateTest extends SimpleDbTestBase {
     private void doAggregate(Aggregator.Op operation, int groupColumn)
             throws IOException, DbException, TransactionAbortedException {
         // Create the table
-        ArrayList<ArrayList<Integer>> createdTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> createdTuples = new ArrayList<List<Integer>>();
         HeapFile table = SystemTestUtil.createRandomHeapFile(
                 COLUMNS, ROWS, MAX_VALUE, null, createdTuples);
 
         // Compute the expected answer
-        ArrayList<ArrayList<Integer>> expected =
+        List<List<Integer>> expected =
                 aggregate(createdTuples, operation, 1, groupColumn);
 
         // validate that we get the answer

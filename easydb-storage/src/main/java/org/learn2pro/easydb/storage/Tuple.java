@@ -44,6 +44,9 @@ public class Tuple implements Serializable {
         this.values = values;
     }
 
+    public Tuple clone() {
+        return new Tuple(this.schema, values);
+    }
     /**
      * @return The TupleDesc representing the schema of this tuple.
      */

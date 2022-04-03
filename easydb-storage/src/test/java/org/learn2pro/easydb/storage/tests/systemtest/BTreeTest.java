@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -30,7 +31,7 @@ public class BTreeTest extends SimpleDbTestBase {
 	 * Helper method to clean up the syntax of starting a BTreeInserter thread.
 	 * The parameters pass through to the BTreeInserter constructor.
 	 */
-	public BTreeInserter startInserter(BTreeFile bf, int[] tupdata, BlockingQueue<ArrayList<Integer>> insertedTuples) {
+	public BTreeInserter startInserter(BTreeFile bf, int[] tupdata, BlockingQueue<List<Integer>> insertedTuples) {
 
 		BTreeInserter bi = new BTreeInserter(bf, tupdata, insertedTuples);
 		bi.start();
@@ -41,14 +42,14 @@ public class BTreeTest extends SimpleDbTestBase {
 	 * Helper method to clean up the syntax of starting a BTreeDeleter thread.
 	 * The parameters pass through to the BTreeDeleter constructor.
 	 */
-	public BTreeDeleter startDeleter(BTreeFile bf, BlockingQueue<ArrayList<Integer>> insertedTuples) {
+	public BTreeDeleter startDeleter(BTreeFile bf, BlockingQueue<List<Integer>> insertedTuples) {
 
 		BTreeDeleter bd = new BTreeDeleter(bf, insertedTuples);
 		bd.start();
 		return bd;
 	}
 
-	private void waitForInserterThreads(ArrayList<BTreeInserter> insertThreads)
+	private void waitForInserterThreads(List<BTreeInserter> insertThreads)
 			throws Exception {
 		Thread.sleep(POLL_INTERVAL);
 		for(BTreeInserter thread : insertThreads) {
@@ -58,7 +59,7 @@ public class BTreeTest extends SimpleDbTestBase {
 		}
 	}
 
-	private void waitForDeleterThreads(ArrayList<BTreeDeleter> deleteThreads)
+	private void waitForDeleterThreads(List<BTreeDeleter> deleteThreads)
 			throws Exception {
 		Thread.sleep(POLL_INTERVAL);
 		for(BTreeDeleter thread : deleteThreads) {
@@ -89,21 +90,21 @@ public class BTreeTest extends SimpleDbTestBase {
     	// This should create a B+ tree with a packed second tier of internal pages
 		// and packed third tier of leaf pages
     	System.out.println("Creating large random B+ tree...");
-    	ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> tuples = new ArrayList<>();
 		BTreeFile bf = BTreeUtility.createRandomBTreeFile(2, 31000,
 				null, tuples, 0);
 
 		// we will need more room in the buffer pool for this test
 		Database.resetBufferPool(500);
 
-    	ArrayBlockingQueue<ArrayList<Integer>> insertedTuples = new ArrayBlockingQueue<ArrayList<Integer>>(100000);
+    	ArrayBlockingQueue<List<Integer>> insertedTuples = new ArrayBlockingQueue<List<Integer>>(100000);
 		insertedTuples.addAll(tuples);
 		assertEquals(31000, insertedTuples.size());
 		int size = insertedTuples.size();
 
 		// now insert some random tuples
 		System.out.println("Inserting tuples...");
-    	ArrayList<BTreeInserter> insertThreads = new ArrayList<BTreeInserter>();
+		List<BTreeInserter> insertThreads = new ArrayList<BTreeInserter>();
 		for(int i = 0; i < 200; i++) {
 			BTreeInserter bi = startInserter(bf, getRandomTupleData(), insertedTuples);
 			insertThreads.add(bi);
@@ -168,7 +169,7 @@ public class BTreeTest extends SimpleDbTestBase {
 		insertThreads = null;
 		deleteThreads = null;
 
-		ArrayList<ArrayList<Integer>> tuplesList = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> tuplesList = new ArrayList<>();
 		tuplesList.addAll(insertedTuples);
 		TransactionId tid = new TransactionId();
 
@@ -176,7 +177,7 @@ public class BTreeTest extends SimpleDbTestBase {
 		System.out.println("Searching for tuples...");
 		for(int i = 0; i < 10000; i++) {
 			int rand = r.nextInt(insertedTuples.size());
-			ArrayList<Integer> tuple = tuplesList.get(rand);
+			List<Integer> tuple = tuplesList.get(rand);
 			IntField randKey = new IntField(tuple.get(bf.keyField()));
 			IndexPredicate ipred = new IndexPredicate(Op.EQUALS, randKey);
 			DbFileIterator it = bf.indexIterator(tid, ipred);

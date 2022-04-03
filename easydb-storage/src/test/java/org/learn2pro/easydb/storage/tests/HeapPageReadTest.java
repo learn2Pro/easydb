@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class HeapPageReadTest extends SimpleDbTestBase {
 
     static {
         // Build the input table
-        ArrayList<ArrayList<Integer>> table = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> table = new ArrayList<List<Integer>>();
         for (int[] tuple : EXAMPLE_VALUES) {
             ArrayList<Integer> listTuple = new ArrayList<Integer>();
             for (int value : tuple) {

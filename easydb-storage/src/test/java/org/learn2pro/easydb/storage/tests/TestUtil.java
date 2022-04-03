@@ -13,14 +13,11 @@ import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.DbException;
 import org.learn2pro.easydb.storage.DbFile;
 import org.learn2pro.easydb.storage.DbFileIterator;
-import org.learn2pro.easydb.storage.common.Field;
 import org.learn2pro.easydb.storage.HeapFile;
-import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.OpIterator;
 import org.learn2pro.easydb.storage.Page;
 import org.learn2pro.easydb.storage.PageId;
 import org.learn2pro.easydb.storage.Permissions;
-import org.learn2pro.easydb.storage.common.StringField;
 import org.learn2pro.easydb.storage.TransactionAbortedException;
 import org.learn2pro.easydb.storage.TransactionId;
 import org.learn2pro.easydb.storage.Tuple;
@@ -28,6 +25,9 @@ import org.learn2pro.easydb.storage.TupleDesc;
 import org.learn2pro.easydb.storage.TupleIterator;
 import org.learn2pro.easydb.storage.Type;
 import org.learn2pro.easydb.storage.Utility;
+import org.learn2pro.easydb.storage.common.Field;
+import org.learn2pro.easydb.storage.common.IntField;
+import org.learn2pro.easydb.storage.common.StringField;
 
 public class TestUtil {
 
@@ -386,11 +386,7 @@ public class TestUtil {
                     error = e;
                 }
 
-                try {
-                    Database.getBufferPool().transactionComplete(tid, false);
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
+                Database.getBufferPool().transactionComplete(tid, false);
             }
         }
 

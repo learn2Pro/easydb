@@ -3,6 +3,7 @@ package org.learn2pro.easydb.storage.tests.systemtest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.DbException;
@@ -22,21 +23,21 @@ public class JoinTest extends SimpleDbTestBase {
         // Create the two tables
         HashMap<Integer, Integer> columnSpecification = new HashMap<Integer, Integer>();
         columnSpecification.put(0, table1ColumnValue);
-        ArrayList<ArrayList<Integer>> t1Tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> t1Tuples = new ArrayList<List<Integer>>();
         HeapFile table1 = SystemTestUtil.createRandomHeapFile(
                 COLUMNS, table1Rows, columnSpecification, t1Tuples);
         assert t1Tuples.size() == table1Rows;
 
         columnSpecification.put(0, table2ColumnValue);
-        ArrayList<ArrayList<Integer>> t2Tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> t2Tuples = new ArrayList<List<Integer>>();
         HeapFile table2 = SystemTestUtil.createRandomHeapFile(
                 COLUMNS, table2Rows, columnSpecification, t2Tuples);
         assert t2Tuples.size() == table2Rows;
 
         // Generate the expected results
-        ArrayList<ArrayList<Integer>> expectedResults = new ArrayList<ArrayList<Integer>>();
-        for (ArrayList<Integer> t1 : t1Tuples) {
-            for (ArrayList<Integer> t2 : t2Tuples) {
+        List<List<Integer>> expectedResults = new ArrayList<List<Integer>>();
+        for (List<Integer> t1 : t1Tuples) {
+            for (List<Integer> t2 : t2Tuples) {
                 // If the columns match, join the tuples
                 if (t1.get(0).equals(t2.get(0))) {
                     ArrayList<Integer> out = new ArrayList<Integer>(t1);

@@ -28,12 +28,16 @@ import org.learn2pro.easydb.storage.common.IntField;
  *
  */
 public class BTreeInternalPage extends BTreePage {
-	private final byte header[];
-	private final Field keys[];
-	private final int children[];
-	private final int numSlots;
+	private byte header[];
+	private Field keys[];
+	private int children[];
+	private int numSlots;
 
 	private int childCategory; // either leaf or internal
+
+	public int getChildCategory() {
+		return childCategory;
+	}
 
 	public void checkRep(Field lowerBound, Field upperBound, boolean checkOccupancy, int depth) {
 		Field prev = lowerBound;
@@ -82,6 +86,10 @@ public class BTreeInternalPage extends BTreePage {
 	public BTreeInternalPage(BTreePageId id, byte[] data, int key) throws IOException {
 		super(id, key);
 		this.numSlots = getMaxEntries() + 1;
+		setData(data);
+	}
+
+	public void setData(byte[] data) throws IOException {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
 
 		// Read the parent pointer
@@ -96,28 +104,31 @@ public class BTreeInternalPage extends BTreePage {
 		childCategory = (int) dis.readByte();
 
 		// allocate and read the header slots of this page
-		header = new byte[getHeaderSize()];
-		for (int i=0; i<header.length; i++)
+		this.header = new byte[getHeaderSize()];
+		for (int i = 0; i < header.length; i++) {
 			header[i] = dis.readByte();
+		}
 
 		keys = new Field[numSlots];
-		try{
+		try {
 			// allocate and read the keys of this page
 			// start from 1 because the first key slot is not used
 			// since a node with m keys has m+1 pointers
 			keys[0] = null;
-			for (int i=1; i<keys.length; i++)
-				keys[i] = readNextKey(dis,i);
-		}catch(NoSuchElementException e){
+			for (int i = 1; i < keys.length; i++) {
+				keys[i] = readNextKey(dis, i);
+			}
+		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 		}
 
 		children = new int[numSlots];
-		try{
+		try {
 			// allocate and read the child pointers of this page
-			for (int i=0; i<children.length; i++)
-				children[i] = readNextChild(dis,i);
-		}catch(NoSuchElementException e){
+			for (int i = 0; i < children.length; i++) {
+				children[i] = readNextChild(dis, i);
+			}
+		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 		}
 		dis.close();

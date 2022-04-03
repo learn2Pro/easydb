@@ -11,6 +11,17 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.DbFileIterator;
+import org.learn2pro.easydb.storage.Debug;
+import org.learn2pro.easydb.storage.IndexPredicate;
+import org.learn2pro.easydb.storage.Page;
+import org.learn2pro.easydb.storage.PageId;
+import org.learn2pro.easydb.storage.Permissions;
+import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.TransactionId;
+import org.learn2pro.easydb.storage.Tuple;
 import org.learn2pro.easydb.storage.btree.BTreeChecker;
 import org.learn2pro.easydb.storage.btree.BTreeEntry;
 import org.learn2pro.easydb.storage.btree.BTreeFile;
@@ -19,17 +30,7 @@ import org.learn2pro.easydb.storage.btree.BTreeLeafPage;
 import org.learn2pro.easydb.storage.btree.BTreePageId;
 import org.learn2pro.easydb.storage.btree.BTreeRootPtrPage;
 import org.learn2pro.easydb.storage.btree.BTreeUtility;
-import org.learn2pro.easydb.storage.BufferPool;
-import org.learn2pro.easydb.storage.Database;
-import org.learn2pro.easydb.storage.DbFileIterator;
-import org.learn2pro.easydb.storage.IndexPredicate;
 import org.learn2pro.easydb.storage.common.IntField;
-import org.learn2pro.easydb.storage.Page;
-import org.learn2pro.easydb.storage.PageId;
-import org.learn2pro.easydb.storage.Permissions;
-import org.learn2pro.easydb.storage.Predicate.Op;
-import org.learn2pro.easydb.storage.TransactionId;
-import org.learn2pro.easydb.storage.Tuple;
 
 public class BTreeFileInsertTest extends SimpleDbTestBase {
 
@@ -58,6 +59,7 @@ public class BTreeFileInsertTest extends SimpleDbTestBase {
         File emptyFile = File.createTempFile("empty", ".dat");
         emptyFile.deleteOnExit();
         Database.reset();
+
         BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 1);
 
         Tuple tup = null;
@@ -88,6 +90,7 @@ public class BTreeFileInsertTest extends SimpleDbTestBase {
         while (it.hasNext()) {
             Tuple t = it.next();
             int value = ((IntField) t.getField(0)).getValue();
+            Debug.log("%s>=%s\n", value, prev);
             assertTrue(value >= prev);
             prev = value;
         }
@@ -296,9 +299,9 @@ public class BTreeFileInsertTest extends SimpleDbTestBase {
         fit.open();
         while (fit.hasNext()) {
             Tuple tup = fit.next();
-			if (prev != null) {
-				assertTrue(tup.getField(0).compare(Op.GREATER_THAN_OR_EQ, prev.getField(0)));
-			}
+            if (prev != null) {
+                assertTrue(tup.getField(0).compare(Op.GREATER_THAN_OR_EQ, prev.getField(0)));
+            }
             prev = tup;
             count++;
         }

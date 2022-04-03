@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.Database;
 import org.learn2pro.easydb.storage.DbException;
@@ -21,11 +22,11 @@ public class InsertTest extends SimpleDbTestBase {
     private void validateInsert(int columns, int sourceRows, int destinationRows)
                 throws DbException, IOException, TransactionAbortedException {
         // Create the two tables
-        ArrayList<ArrayList<Integer>> sourceTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> sourceTuples = new ArrayList<List<Integer>>();
         HeapFile source = SystemTestUtil.createRandomHeapFile(
                 columns, sourceRows, null, sourceTuples);
         assert sourceTuples.size() == sourceRows;
-        ArrayList<ArrayList<Integer>> destinationTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> destinationTuples = new ArrayList<List<Integer>>();
         HeapFile destination = SystemTestUtil.createRandomHeapFile(
                 columns, destinationRows, null, destinationTuples);
         assert destinationTuples.size() == destinationRows;

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class ScanTest extends SimpleDbTestBase {
             throws IOException, DbException, TransactionAbortedException {
         for (int columns : columnSizes) {
             for (int rows : rowSizes) {
-                ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+                List<List<Integer>> tuples = new ArrayList<List<Integer>>();
                 HeapFile f = SystemTestUtil.createRandomHeapFile(columns, rows, null, tuples);
                 SystemTestUtil.matchTuples(f, tuples);
                 Database.resetBufferPool(BufferPool.DEFAULT_PAGES);
@@ -53,7 +54,7 @@ public class ScanTest extends SimpleDbTestBase {
 
     /** Test that rewinding a SeqScan iterator works. */
     @Test public void testRewind() throws IOException, DbException, TransactionAbortedException {
-        ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuples = new ArrayList<List<Integer>>();
         HeapFile f = SystemTestUtil.createRandomHeapFile(2, 1000, null, tuples);
 
         TransactionId tid = new TransactionId();
@@ -96,7 +97,7 @@ public class ScanTest extends SimpleDbTestBase {
 
         // Create the table
         final int PAGES = 2;
-        ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuples = new ArrayList<List<Integer>>();
         File f = SystemTestUtil.createRandomHeapFileUnopened(1, 992*PAGES, 1000, null, tuples);
         TupleDesc td = Utility.getTupleDesc(1);
         InstrumentedHeapFile table = new InstrumentedHeapFile(f, td);

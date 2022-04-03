@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
      * @throws IOException if a temporary file can't be created to hand to HeapFile to open and read its data
      */
     public static HeapFile createDuplicateHeapFile(
-            ArrayList<ArrayList<Integer>> tuples, int columns, String colPrefix)
+            List<List<Integer>> tuples, int columns, String colPrefix)
             throws IOException {
         File temp = File.createTempFile("table", ".dat");
         temp.deleteOnExit();
@@ -47,13 +48,13 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         return Utility.openHeapFile(columns, colPrefix, temp);
     }
 
-    ArrayList<ArrayList<Integer>> tuples1;
+    List<List<Integer>> tuples1;
     HeapFile f1;
     String tableName1;
     int tableId1;
     TableStats stats1;
 
-    ArrayList<ArrayList<Integer>> tuples2;
+    List<List<Integer>> tuples2;
     HeapFile f2;
     String tableName2;
     int tableId2;
@@ -66,7 +67,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
     public void setUp() throws Exception {
         super.setUp();
         // Create some sample tables to work with
-        this.tuples1 = new ArrayList<ArrayList<Integer>>();
+        this.tuples1 = new ArrayList<List<Integer>>();
         this.f1 = SystemTestUtil.createRandomHeapFile(10, 1000, 20, null,
                 tuples1, "c");
 
@@ -78,7 +79,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         stats1 = new TableStats(tableId1, 19);
         TableStats.setTableStats(tableName1, stats1);
 
-        this.tuples2 = new ArrayList<ArrayList<Integer>>();
+        this.tuples2 = new ArrayList<List<Integer>>();
         this.f2 = SystemTestUtil.createRandomHeapFile(10, 10000, 20, null,
                 tuples2, "c");
 
@@ -292,22 +293,22 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         HashMap<String, Double> filterSelectivities = new HashMap<String, Double>();
 
         // Create all of the tables, and add them to the catalog
-        ArrayList<ArrayList<Integer>> empTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> empTuples = new ArrayList<List<Integer>>();
         HeapFile emp = SystemTestUtil.createRandomHeapFile(6, 100000, null,
                 empTuples, "c");
         Database.getCatalog().addTable(emp, "emp");
 
-        ArrayList<ArrayList<Integer>> deptTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> deptTuples = new ArrayList<List<Integer>>();
         HeapFile dept = SystemTestUtil.createRandomHeapFile(3, 1000, null,
                 deptTuples, "c");
         Database.getCatalog().addTable(dept, "dept");
 
-        ArrayList<ArrayList<Integer>> hobbyTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> hobbyTuples = new ArrayList<List<Integer>>();
         HeapFile hobby = SystemTestUtil.createRandomHeapFile(6, 1000, null,
                 hobbyTuples, "c");
         Database.getCatalog().addTable(hobby, "hobby");
 
-        ArrayList<ArrayList<Integer>> hobbiesTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> hobbiesTuples = new ArrayList<List<Integer>>();
         HeapFile hobbies = SystemTestUtil.createRandomHeapFile(2, 200000, null,
                 hobbiesTuples, "c");
         Database.getCatalog().addTable(hobbies, "hobbies");
@@ -395,7 +396,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         TransactionId tid = new TransactionId();
 
         // Create a large set of tables, and add tuples to the tables
-        ArrayList<ArrayList<Integer>> smallHeapFileTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> smallHeapFileTuples = new ArrayList<List<Integer>>();
         HeapFile smallHeapFileA = SystemTestUtil.createRandomHeapFile(2, 100,
                 Integer.MAX_VALUE, null, smallHeapFileTuples, "c");
         HeapFile smallHeapFileB = createDuplicateHeapFile(smallHeapFileTuples,
@@ -425,7 +426,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         HeapFile smallHeapFileN = createDuplicateHeapFile(smallHeapFileTuples,
                 2, "c");
 
-        ArrayList<ArrayList<Integer>> bigHeapFileTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> bigHeapFileTuples = new ArrayList<List<Integer>>();
         for (int i = 0; i < 100000; i++) {
             bigHeapFileTuples.add(smallHeapFileTuples.get(i % 100));
         }
@@ -538,7 +539,7 @@ public class JoinOptimizerTest extends SimpleDbTestBase {
         TransactionId tid = new TransactionId();
 
         // Create a large set of tables, and add tuples to the tables
-        ArrayList<ArrayList<Integer>> smallHeapFileTuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> smallHeapFileTuples = new ArrayList<List<Integer>>();
         HeapFile smallHeapFileA = SystemTestUtil.createRandomHeapFile(2, 100,
                 Integer.MAX_VALUE, null, smallHeapFileTuples, "c");
         HeapFile smallHeapFileB = createDuplicateHeapFile(smallHeapFileTuples,

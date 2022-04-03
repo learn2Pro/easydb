@@ -9,8 +9,12 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.learn2pro.easydb.storage.*;
+import org.learn2pro.easydb.storage.BufferPool;
+import org.learn2pro.easydb.storage.Database;
+import org.learn2pro.easydb.storage.Page;
+import org.learn2pro.easydb.storage.PageId;
 import org.learn2pro.easydb.storage.Predicate.Op;
+import org.learn2pro.easydb.storage.TransactionId;
 import org.learn2pro.easydb.storage.btree.BTreeEntry;
 import org.learn2pro.easydb.storage.btree.BTreeFile;
 import org.learn2pro.easydb.storage.btree.BTreeInternalPage;
@@ -22,168 +26,165 @@ import org.learn2pro.easydb.storage.common.IntField;
 import org.learn2pro.easydb.storage.tests.systemtest.SimpleDbTestBase;
 
 public class BTreeFileInsertTest extends SimpleDbTestBase {
-	private TransactionId tid;
 
-	/**
-	 * Set up initial resources for each unit test.
-	 */
-	@Before
-	public void setUp() throws Exception {
-		tid = new TransactionId();
-	}
+    private TransactionId tid;
 
-	@After
-	public void tearDown() throws Exception {
-		Database.getBufferPool().transactionComplete(tid);
+    /**
+     * Set up initial resources for each unit test.
+     */
+    @Before
+    public void setUp() throws Exception {
+        tid = new TransactionId();
+    }
 
-		// set the page size back to the default
-		BufferPool.resetPageSize();
-		Database.reset();
-	}
+    @After
+    public void tearDown() throws Exception {
+        Database.getBufferPool().transactionComplete(tid);
 
-	@Test
-	public void testSplitLeafPages() throws Exception {
-		File emptyFile = File.createTempFile("empty", ".dat");
-		emptyFile.deleteOnExit();
-		Database.reset();
-		BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3);
-		int tableid = empty.getId();
-		int keyField = 0;
+        // set the page size back to the default
+        BufferPool.resetPageSize();
+        Database.reset();
+    }
 
-		// create the leaf page
-		BTreePageId leftPageId = new BTreePageId(tableid, 2, BTreePageId.LEAF);
-		BTreeLeafPage leftPage = BTreeUtility.createRandomLeafPage(leftPageId, 2, keyField,
-				0, BTreeUtility.MAX_RAND_VALUE);
+    @Test
+    public void testSplitLeafPages() throws Exception {
+        File emptyFile = File.createTempFile("empty", ".dat");
+        emptyFile.deleteOnExit();
+        Database.reset();
+        BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3);
+        int tableid = empty.getId();
+        int keyField = 0;
 
-		// create the parent page
-		BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
-		BTreeInternalPage parent = new BTreeInternalPage(parentId,
-				BTreeInternalPage.createEmptyPageData(), keyField);
+        // create the leaf page
+        BTreePageId leftPageId = new BTreePageId(tableid, 2, BTreePageId.LEAF);
+        BTreeLeafPage leftPage = BTreeUtility.createRandomLeafPage(leftPageId, 2, keyField,
+                0, BTreeUtility.MAX_RAND_VALUE);
 
-		// set the pointers
-		leftPage.setParentId(parentId);
+        // create the parent page
+        BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
+        BTreeInternalPage parent = new BTreeInternalPage(parentId,
+                BTreeInternalPage.createEmptyPageData(), keyField);
 
-		Field field = new IntField(BTreeUtility.MAX_RAND_VALUE/2);
-		HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
-		dirtypages.put(leftPageId, leftPage);
-		dirtypages.put(parentId, parent);
-		BTreeLeafPage page = empty.splitLeafPage(tid, dirtypages, leftPage, field);
-		assertTrue(page.getLeftSiblingId() != null || page.getRightSiblingId() != null);
-		BTreeLeafPage otherPage;
-		if(page.getLeftSiblingId() != null) {
-			otherPage = (BTreeLeafPage) dirtypages.get(page.getLeftSiblingId());
-			assertTrue(field.compare(Op.GREATER_THAN_OR_EQ,
-					otherPage.reverseIterator().next().getField(keyField)));
-		}
-		else { // page.getRightSiblingId() != null
-			otherPage = (BTreeLeafPage) dirtypages.get(page.getRightSiblingId());
-			assertTrue(field.compare(Op.LESS_THAN_OR_EQ,
-					otherPage.iterator().next().getField(keyField)));
-		}
+        // set the pointers
+        leftPage.setParentId(parentId);
 
-		int totalTuples = page.getNumTuples() + otherPage.getNumTuples();
-		assertEquals(BTreeUtility.getNumTuplesPerPage(2), totalTuples);
-		assertTrue(BTreeUtility.getNumTuplesPerPage(2)/2 == page.getNumTuples() ||
-				BTreeUtility.getNumTuplesPerPage(2)/2 + 1 == page.getNumTuples());
-		assertTrue(BTreeUtility.getNumTuplesPerPage(2)/2 == otherPage.getNumTuples() ||
-				BTreeUtility.getNumTuplesPerPage(2)/2 + 1 == otherPage.getNumTuples());
-		assertEquals(1, parent.getNumEntries());
-	}
+        Field field = new IntField(BTreeUtility.MAX_RAND_VALUE / 2);
+        HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
+        dirtypages.put(leftPageId, leftPage);
+        dirtypages.put(parentId, parent);
+        BTreeLeafPage page = empty.splitLeafPage(tid, dirtypages, leftPage, field);
+        assertTrue(page.getLeftSiblingId() != null || page.getRightSiblingId() != null);
+        BTreeLeafPage otherPage;
+        if (page.getLeftSiblingId() != null) {
+            otherPage = (BTreeLeafPage) dirtypages.get(page.getLeftSiblingId());
+            assertTrue(field.compare(Op.GREATER_THAN_OR_EQ,
+                    otherPage.reverseIterator().next().getField(keyField)));
+        } else { // page.getRightSiblingId() != null
+            otherPage = (BTreeLeafPage) dirtypages.get(page.getRightSiblingId());
+            assertTrue(field.compare(Op.LESS_THAN_OR_EQ,
+                    otherPage.iterator().next().getField(keyField)));
+        }
 
-	@Test
-	public void testSplitInternalPages() throws Exception {
-		File emptyFile = File.createTempFile("empty", ".dat");
-		emptyFile.deleteOnExit();
-		Database.reset();
-		int entriesPerPage = BTreeUtility.getNumEntriesPerPage();
-		BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3 + entriesPerPage);
-		int tableid = empty.getId();
-		int keyField = 0;
+        int totalTuples = page.getNumTuples() + otherPage.getNumTuples();
+        assertEquals(BTreeUtility.getNumTuplesPerPage(2), totalTuples);
+        assertTrue(BTreeUtility.getNumTuplesPerPage(2) / 2 == page.getNumTuples() ||
+                BTreeUtility.getNumTuplesPerPage(2) / 2 + 1 == page.getNumTuples());
+        assertTrue(BTreeUtility.getNumTuplesPerPage(2) / 2 == otherPage.getNumTuples() ||
+                BTreeUtility.getNumTuplesPerPage(2) / 2 + 1 == otherPage.getNumTuples());
+        assertEquals(1, parent.getNumEntries());
+    }
 
-		// create the internal page
-		BTreePageId leftPageId = new BTreePageId(tableid, 2, BTreePageId.INTERNAL);
-		BTreeInternalPage leftPage = BTreeUtility.createRandomInternalPage(leftPageId, keyField, BTreePageId.LEAF,
-				0, BTreeUtility.MAX_RAND_VALUE, 3);
+    @Test
+    public void testSplitInternalPages() throws Exception {
+        File emptyFile = File.createTempFile("empty", ".dat");
+        emptyFile.deleteOnExit();
+        Database.reset();
+        int entriesPerPage = BTreeUtility.getNumEntriesPerPage();
+        BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3 + entriesPerPage);
+        int tableid = empty.getId();
+        int keyField = 0;
 
-		// create the parent page
-		BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
-		BTreeInternalPage parent = new BTreeInternalPage(parentId,
-				BTreeInternalPage.createEmptyPageData(), keyField);
+        // create the internal page
+        BTreePageId leftPageId = new BTreePageId(tableid, 2, BTreePageId.INTERNAL);
+        BTreeInternalPage leftPage = BTreeUtility.createRandomInternalPage(leftPageId, keyField, BTreePageId.LEAF,
+                0, BTreeUtility.MAX_RAND_VALUE, 3);
 
-		// set the pointers
-		leftPage.setParentId(parentId);
+        // create the parent page
+        BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
+        BTreeInternalPage parent = new BTreeInternalPage(parentId, BTreeInternalPage.createEmptyPageData(), keyField);
 
-		Field field = new IntField(BTreeUtility.MAX_RAND_VALUE/2);
-		HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
-		dirtypages.put(leftPageId, leftPage);
-		dirtypages.put(parentId, parent);
-		BTreeInternalPage page = empty.splitInternalPage(tid, dirtypages, leftPage, field);
-		BTreeInternalPage otherPage;
-		assertEquals(1, parent.getNumEntries());
-		BTreeEntry parentEntry = parent.iterator().next();
-		if(parentEntry.getLeftChild().equals(page.getId())) {
-			otherPage = (BTreeInternalPage) dirtypages.get(parentEntry.getRightChild());
-			assertTrue(field.compare(Op.LESS_THAN_OR_EQ,
-					otherPage.iterator().next().getKey()));
-		}
-		else { // parentEntry.getRightChild().equals(page.getId())
-			otherPage = (BTreeInternalPage) dirtypages.get(parentEntry.getLeftChild());
-			assertTrue(field.compare(Op.GREATER_THAN_OR_EQ,
-					otherPage.reverseIterator().next().getKey()));
-		}
+        // set the pointers
+        leftPage.setParentId(parentId);
 
-		int totalEntries = page.getNumEntries() + otherPage.getNumEntries();
-		assertEquals(entriesPerPage - 1, totalEntries);
-		assertTrue(entriesPerPage/2 == page.getNumEntries() ||
-				entriesPerPage/2 - 1 == page.getNumEntries());
-		assertTrue(entriesPerPage/2 == otherPage.getNumEntries() ||
-				entriesPerPage/2 - 1 == otherPage.getNumEntries());
-	}
+        Field field = new IntField(BTreeUtility.MAX_RAND_VALUE / 2);
+        HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
+        dirtypages.put(leftPageId, leftPage);
+        dirtypages.put(parentId, parent);
+        BTreeInternalPage page = empty.splitInternalPage(tid, dirtypages, leftPage, field);
+        BTreeInternalPage otherPage;
+        assertEquals(1, parent.getNumEntries());
+        BTreeEntry parentEntry = parent.iterator().next();
+        if (parentEntry.getLeftChild().equals(page.getId())) {
+            otherPage = (BTreeInternalPage) dirtypages.get(parentEntry.getRightChild());
+            assertTrue(field.compare(Op.LESS_THAN_OR_EQ,
+                    otherPage.iterator().next().getKey()));
+        } else { // parentEntry.getRightChild().equals(page.getId())
+            otherPage = (BTreeInternalPage) dirtypages.get(parentEntry.getLeftChild());
+            assertTrue(field.compare(Op.GREATER_THAN_OR_EQ,
+                    otherPage.reverseIterator().next().getKey()));
+        }
 
-	@Test
-	public void testReusePage() throws Exception {
-		File emptyFile = File.createTempFile("empty", ".dat");
-		emptyFile.deleteOnExit();
-		Database.reset();
-		BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3);
-		int tableid = empty.getId();
-		int keyField = 0;
+        int totalEntries = page.getNumEntries() + otherPage.getNumEntries();
+        assertEquals(entriesPerPage - 1, totalEntries);
+        assertTrue(entriesPerPage / 2 == page.getNumEntries() ||
+                entriesPerPage / 2 - 1 == page.getNumEntries());
+        assertTrue(entriesPerPage / 2 == otherPage.getNumEntries() ||
+                entriesPerPage / 2 - 1 == otherPage.getNumEntries());
+    }
 
-		// create the leaf page
-		HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
-		empty.setEmptyPage(tid, dirtypages, 2);
-		BTreePageId leftPageId = new BTreePageId(tableid, 3, BTreePageId.LEAF);
-		BTreeLeafPage leftPage = BTreeUtility.createRandomLeafPage(leftPageId, 2, keyField,
-				0, BTreeUtility.MAX_RAND_VALUE);
+    @Test
+    public void testReusePage() throws Exception {
+        File emptyFile = File.createTempFile("empty", ".dat");
+        emptyFile.deleteOnExit();
+        Database.reset();
+        BTreeFile empty = BTreeUtility.createEmptyBTreeFile(emptyFile.getAbsolutePath(), 2, 0, 3);
+        int tableid = empty.getId();
+        int keyField = 0;
 
-		// create the parent page
-		BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
-		BTreeInternalPage parent = new BTreeInternalPage(parentId,
-				BTreeInternalPage.createEmptyPageData(), keyField);
+        // create the leaf page
+        HashMap<PageId, Page> dirtypages = new HashMap<PageId, Page>();
+        empty.setEmptyPage(tid, dirtypages, 2);
+        BTreePageId leftPageId = new BTreePageId(tableid, 3, BTreePageId.LEAF);
+        BTreeLeafPage leftPage = BTreeUtility.createRandomLeafPage(leftPageId, 2, keyField,
+                0, BTreeUtility.MAX_RAND_VALUE);
 
-		// set the pointers
-		leftPage.setParentId(parentId);
+        // create the parent page
+        BTreePageId parentId = new BTreePageId(tableid, 1, BTreePageId.INTERNAL);
+        BTreeInternalPage parent = new BTreeInternalPage(parentId,
+                BTreeInternalPage.createEmptyPageData(), keyField);
 
-		Field field = new IntField(BTreeUtility.MAX_RAND_VALUE/2);
-		dirtypages.put(leftPageId, leftPage);
-		dirtypages.put(parentId, parent);
-		BTreeLeafPage page = empty.splitLeafPage(tid, dirtypages, leftPage, field);
-		assertTrue(page.getLeftSiblingId() != null || page.getRightSiblingId() != null);
-		BTreeLeafPage otherPage;
-		if(page.getLeftSiblingId() != null) {
-			otherPage = (BTreeLeafPage) dirtypages.get(page.getLeftSiblingId());
-		}
-		else { // page.getRightSiblingId() != null
-			otherPage = (BTreeLeafPage) dirtypages.get(page.getRightSiblingId());
-		}
+        // set the pointers
+        leftPage.setParentId(parentId);
 
-		assertTrue(page.getId().getPageNumber() == 2 || otherPage.getId().getPageNumber() == 2);
-	}
+        Field field = new IntField(BTreeUtility.MAX_RAND_VALUE / 2);
+        dirtypages.put(leftPageId, leftPage);
+        dirtypages.put(parentId, parent);
+        BTreeLeafPage page = empty.splitLeafPage(tid, dirtypages, leftPage, field);
+        assertTrue(page.getLeftSiblingId() != null || page.getRightSiblingId() != null);
+        BTreeLeafPage otherPage;
+        if (page.getLeftSiblingId() != null) {
+            otherPage = (BTreeLeafPage) dirtypages.get(page.getLeftSiblingId());
+        } else { // page.getRightSiblingId() != null
+            otherPage = (BTreeLeafPage) dirtypages.get(page.getRightSiblingId());
+        }
 
-	/**
-	 * JUnit suite target
-	 */
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(BTreeFileInsertTest.class);
-	}
+        assertTrue(page.getId().getPageNumber() == 2 || otherPage.getId().getPageNumber() == 2);
+    }
+
+    /**
+     * JUnit suite target
+     */
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(BTreeFileInsertTest.class);
+    }
 }

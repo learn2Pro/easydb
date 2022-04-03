@@ -2,6 +2,7 @@ package org.learn2pro.easydb.storage.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class TableStatsTest extends SimpleDbTestBase {
 
     public static final int IO_COST = 71;
 
-    ArrayList<ArrayList<Integer>> tuples;
+    List<List<Integer>> tuples;
     HeapFile f;
     String tableName;
     int tableId;
@@ -28,7 +29,7 @@ public class TableStatsTest extends SimpleDbTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.tuples = new ArrayList<ArrayList<Integer>>();
+        this.tuples = new ArrayList<>();
         this.f = SystemTestUtil.createRandomHeapFile(10, 10200, 32, null, tuples);
 
         this.tableName = SystemTestUtil.getUUID();

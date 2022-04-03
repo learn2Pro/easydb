@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * HeapFileEncoder reads a comma delimited text file or accepts an array of tuples and converts it to pages of binary
@@ -33,12 +34,12 @@ public class HeapFileEncoder {
      * @see HeapPage
      * @see HeapFile
      */
-    public static void convert(ArrayList<ArrayList<Integer>> tuples, File outFile, int npagebytes, int numFields)
+    public static void convert(List<List<Integer>> tuples, File outFile, int npagebytes, int numFields)
             throws IOException {
         File tempInput = File.createTempFile("tempTable", ".txt");
         tempInput.deleteOnExit();
         BufferedWriter bw = new BufferedWriter(new FileWriter(tempInput));
-        for (ArrayList<Integer> tuple : tuples) {
+        for (List<Integer> tuple : tuples) {
             int writtenFields = 0;
             for (Integer field : tuple) {
                 writtenFields++;

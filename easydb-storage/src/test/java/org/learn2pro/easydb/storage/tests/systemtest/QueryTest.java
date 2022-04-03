@@ -3,6 +3,7 @@ package org.learn2pro.easydb.storage.tests.systemtest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.stats.TableStats;
@@ -17,7 +18,7 @@ public class QueryTest {
 	 * @return a new HeapFile containing the specified tuples
 	 * @throws IOException if a temporary file can't be created to hand to HeapFile to open and read its data
 	 */
-	public static HeapFile createDuplicateHeapFile(ArrayList<ArrayList<Integer>> tuples, int columns, String colPrefix) throws IOException {
+	public static HeapFile createDuplicateHeapFile(List<List<Integer>> tuples, int columns, String colPrefix) throws IOException {
         File temp = File.createTempFile("table", ".dat");
         temp.deleteOnExit();
         HeapFileEncoder.convert(tuples, temp, BufferPool.getPageSize(), columns);
@@ -35,19 +36,19 @@ public class QueryTest {
 //		HashMap<String, TableStats> stats = new HashMap<String, TableStats>();
 
 		// Create all of the tables, and add them to the catalog
-		ArrayList<ArrayList<Integer>> empTuples = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> empTuples = new ArrayList<List<Integer>>();
 		HeapFile emp = SystemTestUtil.createRandomHeapFile(6, 100000, null, empTuples, "c");
 		Database.getCatalog().addTable(emp, "emp");
 
-		ArrayList<ArrayList<Integer>> deptTuples = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> deptTuples = new ArrayList<List<Integer>>();
 		HeapFile dept = SystemTestUtil.createRandomHeapFile(3, 1000, null, deptTuples, "c");
 		Database.getCatalog().addTable(dept, "dept");
 
-		ArrayList<ArrayList<Integer>> hobbyTuples = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> hobbyTuples = new ArrayList<List<Integer>>();
 		HeapFile hobby = SystemTestUtil.createRandomHeapFile(6, 1000, null, hobbyTuples, "c");
 		Database.getCatalog().addTable(hobby, "hobby");
 
-		ArrayList<ArrayList<Integer>> hobbiesTuples = new ArrayList<ArrayList<Integer>>();
+		List<List<Integer>> hobbiesTuples = new ArrayList<List<Integer>>();
 		HeapFile hobbies = SystemTestUtil.createRandomHeapFile(2, 200000, null, hobbiesTuples, "c");
 		Database.getCatalog().addTable(hobbies, "hobbies");
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.learn2pro.easydb.storage.common.IntField;
 
@@ -148,7 +149,7 @@ public class Utility {
         return hf;
     }
 
-    public static String listToString(ArrayList<Integer> list) {
+    public static String listToString(List<Integer> list) {
         String out = "";
         for (Integer i : list) {
             if (out.length() > 0) out += "\t";

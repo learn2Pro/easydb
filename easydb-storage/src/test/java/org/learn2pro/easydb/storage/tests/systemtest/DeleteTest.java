@@ -6,11 +6,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.learn2pro.easydb.storage.*;
 import org.learn2pro.easydb.storage.common.IntField;
 
 public class DeleteTest extends FilterBase {
-    ArrayList<ArrayList<Integer>> expectedTuples = null;
+    List<List<Integer>> expectedTuples = null;
 
     @Override
     protected int applyPredicate(HeapFile table, TransactionId tid, Predicate predicate)
@@ -41,7 +42,7 @@ public class DeleteTest extends FilterBase {
             expectedTuples = createdTuples;
         } else {
             assert result == createdTuples.size();
-            expectedTuples = new ArrayList<ArrayList<Integer>>();
+            expectedTuples = new ArrayList<List<Integer>>();
         }
         SystemTestUtil.matchTuples(table, tid, expectedTuples);
         return result;

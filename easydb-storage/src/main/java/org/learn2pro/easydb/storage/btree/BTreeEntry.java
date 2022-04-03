@@ -135,5 +135,9 @@ public class BTreeEntry implements Serializable {
 		return "[" + leftChild.getPageNumber() + "|" + key + "|" + rightChild.getPageNumber() + "]";
 	}
 
+	public BTreeEntry clone() {
+		return new BTreeEntry(this.key, this.leftChild, this.rightChild);
+	}
+
 }
 

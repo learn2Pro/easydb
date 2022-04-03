@@ -20,7 +20,7 @@ public class SystemTestUtil {
     /** @param columnSpecification Mapping between column index and value. */
     public static HeapFile createRandomHeapFile(
             int columns, int rows, Map<Integer, Integer> columnSpecification,
-            ArrayList<ArrayList<Integer>> tuples)
+            List<List<Integer>> tuples)
             throws IOException, DbException, TransactionAbortedException {
         return createRandomHeapFile(columns, rows, MAX_RAND_VALUE, columnSpecification, tuples);
     }
@@ -28,7 +28,7 @@ public class SystemTestUtil {
     /** @param columnSpecification Mapping between column index and value. */
     public static HeapFile createRandomHeapFile(
             int columns, int rows, int maxValue, Map<Integer, Integer> columnSpecification,
-            ArrayList<ArrayList<Integer>> tuples)
+            List<List<Integer>> tuples)
             throws IOException, DbException, TransactionAbortedException {
         File temp = createRandomHeapFileUnopened(columns, rows, maxValue,
                 columnSpecification, tuples);
@@ -37,14 +37,14 @@ public class SystemTestUtil {
 
     public static HeapFile createRandomHeapFile(
             int columns, int rows, Map<Integer, Integer> columnSpecification,
-            ArrayList<ArrayList<Integer>> tuples, String colPrefix)
+            List<List<Integer>> tuples, String colPrefix)
             throws IOException, DbException, TransactionAbortedException {
         return createRandomHeapFile(columns, rows, MAX_RAND_VALUE, columnSpecification, tuples, colPrefix);
     }
 
     public static HeapFile createRandomHeapFile(
             int columns, int rows, int maxValue, Map<Integer, Integer> columnSpecification,
-            ArrayList<ArrayList<Integer>> tuples, String colPrefix)
+            List<List<Integer>> tuples, String colPrefix)
             throws IOException, DbException, TransactionAbortedException {
         File temp = createRandomHeapFileUnopened(columns, rows, maxValue,
                 columnSpecification, tuples);
@@ -53,18 +53,18 @@ public class SystemTestUtil {
 
     public static File createRandomHeapFileUnopened(int columns, int rows,
             int maxValue, Map<Integer, Integer> columnSpecification,
-            ArrayList<ArrayList<Integer>> tuples) throws IOException {
+            List<List<Integer>> tuples) throws IOException {
         if (tuples != null) {
             tuples.clear();
         } else {
-            tuples = new ArrayList<ArrayList<Integer>>(rows);
+            tuples = new ArrayList<List<Integer>>(rows);
         }
 
         Random r = new Random();
 
         // Fill the tuples list with generated values
         for (int i = 0; i < rows; ++i) {
-            ArrayList<Integer> tuple = new ArrayList<Integer>(columns);
+            List<Integer> tuple = new ArrayList<Integer>(columns);
             for (int j = 0; j < columns; ++j) {
                 // Generate random values, or use the column specification
                 Integer columnValue = null;
@@ -93,26 +93,26 @@ public class SystemTestUtil {
         return list;
     }
 
-    public static void matchTuples(DbFile f, List<ArrayList<Integer>> tuples)
+    public static void matchTuples(DbFile f, List<List<Integer>> tuples)
             throws DbException, TransactionAbortedException, IOException {
         TransactionId tid = new TransactionId();
         matchTuples(f, tid, tuples);
         Database.getBufferPool().transactionComplete(tid);
     }
 
-    public static void matchTuples(DbFile f, TransactionId tid, List<ArrayList<Integer>> tuples)
+    public static void matchTuples(DbFile f, TransactionId tid, List<List<Integer>> tuples)
             throws DbException, TransactionAbortedException, IOException {
         SeqScan scan = new SeqScan(tid, f.getId(), "");
         matchTuples(scan, tuples);
     }
 
-    public static void matchTuples(OpIterator iterator, List<ArrayList<Integer>> tuples)
+    public static void matchTuples(OpIterator iterator, List<List<Integer>> tuples)
             throws DbException, TransactionAbortedException, IOException {
-        ArrayList<ArrayList<Integer>> copy = new ArrayList<ArrayList<Integer>>(tuples);
+        List<List<Integer>> copy = new ArrayList<List<Integer>>(tuples);
 
         if (Debug.isEnabled()) {
             Debug.log("Expected tuples:");
-            for (ArrayList<Integer> t : copy) {
+            for (List<Integer> t : copy) {
                 Debug.log("\t" + Utility.listToString(t));
             }
         }
@@ -133,7 +133,7 @@ public class SystemTestUtil {
             String msg = "expected to find the following tuples:\n";
             final int MAX_TUPLES_OUTPUT = 10;
             int count = 0;
-            for (ArrayList<Integer> t : copy) {
+            for (List<Integer> t : copy) {
                 if (count == MAX_TUPLES_OUTPUT) {
                     msg += "[" + (copy.size() - MAX_TUPLES_OUTPUT) + " more tuples]";
                     break;

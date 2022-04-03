@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         for (int columns : columnSizes) {
             int keyField = r.nextInt(columns);
             for (int rows : rowSizes) {
-                ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+                List<List<Integer>> tuples = new ArrayList<>();
                 BTreeFile f = BTreeUtility.createRandomBTreeFile(columns, rows, null, tuples, keyField);
                 BTreeScan scan = new BTreeScan(tid, f.getId(), "table", null);
                 SystemTestUtil.matchTuples(scan, tuples);
@@ -57,7 +58,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
     }
 
     // comparator to sort Tuples by key field
-    private static class TupleComparator implements Comparator<ArrayList<Integer>> {
+    private static class TupleComparator implements Comparator<List<Integer>> {
 
         private int keyField;
 
@@ -65,7 +66,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
             this.keyField = keyField;
         }
 
-        public int compare(ArrayList<Integer> t1, ArrayList<Integer> t2) {
+        public int compare(List<Integer> t1, List<Integer> t2) {
             int cmp = 0;
             if (t1.get(keyField) < t2.get(keyField)) {
                 cmp = -1;
@@ -110,7 +111,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
      */
     @Test
     public void testRewind() throws IOException, DbException, TransactionAbortedException {
-        ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuples = new ArrayList<List<Integer>>();
         int keyField = r.nextInt(2);
         BTreeFile f = BTreeUtility.createRandomBTreeFile(2, 1000, null, tuples, keyField);
         Collections.sort(tuples, new TupleComparator(keyField));
@@ -140,18 +141,18 @@ public class BTreeScanTest extends SimpleDbTestBase {
     @Test
     public void testRewindPredicates() throws IOException, DbException, TransactionAbortedException {
         // Create the table
-        ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuples = new ArrayList<List<Integer>>();
         int keyField = r.nextInt(3);
         BTreeFile f = BTreeUtility.createRandomBTreeFile(3, 1000, null, tuples, keyField);
         Collections.sort(tuples, new TupleComparator(keyField));
 
         // EQUALS
         TransactionId tid = new TransactionId();
-        ArrayList<ArrayList<Integer>> tuplesFiltered = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuplesFiltered = new ArrayList<List<Integer>>();
         IndexPredicate ipred = new IndexPredicate(Op.EQUALS, new IntField(r.nextInt(BTreeUtility.MAX_RAND_VALUE)));
-        Iterator<ArrayList<Integer>> it = tuples.iterator();
+        Iterator<List<Integer>> it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) == ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }
@@ -178,7 +179,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         ipred = new IndexPredicate(Op.LESS_THAN, new IntField(r.nextInt(BTreeUtility.MAX_RAND_VALUE)));
         it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) < ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }
@@ -205,7 +206,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         ipred = new IndexPredicate(Op.GREATER_THAN_OR_EQ, new IntField(r.nextInt(BTreeUtility.MAX_RAND_VALUE)));
         it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) >= ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }
@@ -237,7 +238,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         // Create the table
         final int LEAF_PAGES = 30;
 
-        ArrayList<ArrayList<Integer>> tuples = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuples = new ArrayList<List<Integer>>();
         int keyField = 0;
         BTreeFile f = BTreeUtility.createBTreeFile(2, LEAF_PAGES * 502, null, tuples, keyField);
         Collections.sort(tuples, new TupleComparator(keyField));
@@ -247,11 +248,11 @@ public class BTreeScanTest extends SimpleDbTestBase {
 
         // EQUALS
         TransactionId tid = new TransactionId();
-        ArrayList<ArrayList<Integer>> tuplesFiltered = new ArrayList<ArrayList<Integer>>();
+        List<List<Integer>> tuplesFiltered = new ArrayList<List<Integer>>();
         IndexPredicate ipred = new IndexPredicate(Op.EQUALS, new IntField(r.nextInt(LEAF_PAGES * 502)));
-        Iterator<ArrayList<Integer>> it = tuples.iterator();
+        Iterator<List<Integer>> it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) == ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }
@@ -269,7 +270,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         ipred = new IndexPredicate(Op.LESS_THAN, new IntField(r.nextInt(LEAF_PAGES * 502)));
         it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) < ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }
@@ -291,7 +292,7 @@ public class BTreeScanTest extends SimpleDbTestBase {
         ipred = new IndexPredicate(Op.GREATER_THAN_OR_EQ, new IntField(r.nextInt(LEAF_PAGES * 502)));
         it = tuples.iterator();
         while (it.hasNext()) {
-            ArrayList<Integer> tup = it.next();
+            List<Integer> tup = it.next();
             if (tup.get(keyField) >= ((IntField) ipred.getField()).getValue()) {
                 tuplesFiltered.add(tup);
             }

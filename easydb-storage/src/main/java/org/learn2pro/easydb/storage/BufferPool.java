@@ -137,22 +137,25 @@ public class BufferPool {
      * @param tid the ID of the transaction requesting the unlock
      * @param commit a flag indicating whether we should commit or abort
      */
-    public void transactionComplete(TransactionId tid, boolean commit)
-            throws IOException {
+    public void transactionComplete(TransactionId tid, boolean commit) {
         // some code goes here
         // not necessary for lab1|lab2
-        Set<PageId> heldByTid = pageLock.getPagesHeldByTid(tid);
-        if (heldByTid.isEmpty()) {
-            return;
-        }
-        for (PageId pageId : heldByTid) {
-            if (commit) {
-                flushPage(pageId);
-            } else {
-                discardPage(pageId);
+        try {
+            Set<PageId> heldByTid = pageLock.getPagesHeldByTid(tid);
+            if (heldByTid.isEmpty()) {
+                return;
             }
+            for (PageId pageId : heldByTid) {
+                if (commit) {
+                    flushPage(pageId);
+                } else {
+                    discardPage(pageId);
+                }
+            }
+            pageLock.releaseLockTrans(tid);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        pageLock.releaseLockTrans(tid);
     }
 
     /**
