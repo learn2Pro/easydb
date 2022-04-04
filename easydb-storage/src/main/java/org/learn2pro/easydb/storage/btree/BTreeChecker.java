@@ -85,7 +85,11 @@ public class BTreeChecker {
                                        BTreePageId parentId, boolean checkOccupancy, int depth) throws
             TransactionAbortedException, DbException {
         BTreePage page = (BTreePage)bt.getPage(tid, dirtypages, pageId, Permissions.READ_ONLY);
-        assert(page.getParentId().equals(parentId));
+        try {
+            assert(page.getParentId().equals(parentId));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
 
         if (page.getId().pgcateg() == BTreePageId.LEAF) {
             BTreeLeafPage bpage = (BTreeLeafPage) page;
