@@ -111,6 +111,11 @@ public class BufferPool {
         pageLock.releaseLock(tid, pid);
     }
 
+    public void updatePage(TransactionId tid, Page page) throws TransactionAbortedException {
+        pageLock.lockPage(tid, page.getId(), Permissions.READ_WRITE);
+        pageData.put(page.getId(), page);
+    }
+
     /**
      * Release all locks associated with a given transaction.
      *
@@ -245,6 +250,11 @@ public class BufferPool {
             int tableId = p.getId().getTableId();
             DbFile dbFile = Database.getCatalog().getDatabaseFile(tableId);
             dbFile.writePage(p);
+            TransactionId dirtier = p.isDirty();
+            if (dirtier != null) {
+                Database.getLogFile().logWrite(dirtier, p.getBeforeImage(), p);
+                Database.getLogFile().force();
+            }
             p.setBeforeImage();
             p.markDirty(false, null);
         }
